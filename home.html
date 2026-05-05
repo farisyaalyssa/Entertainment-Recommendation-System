@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WatchLy - Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="mainNavbar">
+        <div class="nav-container">
+            <div class="nav-left">
+                <a href="home.html" class="logo">WatchLy</a>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="home.html" class="nav-link active" data-section="home">Home</a></li>
+                    <li><a href="#" class="nav-link" data-section="movies">Movies</a></li>
+                    <li><a href="#" class="nav-link" data-section="tvshows">TV Shows</a></li>
+                    <li><a href="#" class="nav-link" data-section="mylist">My List</a></li>
+                </ul>
+            </div>
+            
+            <div class="nav-right">
+                <div class="search-box" id="searchBox">
+                    <button class="search-toggle" id="searchToggle" aria-label="Search">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <input type="text" class="search-input" id="searchInput" 
+                           placeholder="Titles, people, genres" aria-label="Search">
+                    <button class="search-close" id="searchClose" aria-label="Close search">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="user-menu">
+                    <button class="avatar-btn" id="avatarBtn" aria-label="User menu">
+                        <span class="avatar" id="userAvatar">A</span>
+                    </button>
+                    <div class="user-dropdown" id="userDropdown" role="menu">
+                        <a href="profile.html" role="menuitem"><i class="fas fa-user"></i> Profile</a>
+                        <a href="profile.html?tab=settings" role="menuitem"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="#" onclick="logout()" role="menuitem"><i class="fas fa-sign-out-alt"></i> Sign out</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Carousel -->
+    <section class="hero-carousel" id="heroCarousel" aria-label="Featured content">
+        <div class="hero-slides" id="heroSlides">
+            <!-- Slide 1 -->
+            <div class="hero-slide active" data-index="0">
+                <img src="https://image.tmdb.org/t/p/original/56v2KjBlU4XaOv9rVYkJu64MxXf.jpg" 
+                     alt="Featured Movie 1" class="hero-bg" loading="lazy">
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <span class="hero-badge">Featured</span>
+                    <h1 class="hero-title">The Last Adventure</h1>
+                    <p class="hero-meta">
+                        <span class="rating"><i class="fas fa-star"></i> 8.5</span>
+                        <span class="year">2024</span>
+                        <span class="duration">2h 15m</span>
+                        <span class="genre">Action • Adventure</span>
+                    </p>
+                    <p class="hero-description">
+                        An epic journey through unexplored territories where courage meets destiny. 
+                        Experience breathtaking visuals and an unforgettable story of heroism.
+                    </p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary btn-large" onclick="playContent(1)">
+                            <i class="fas fa-play"></i> Watch Now
+                        </button>
+                        <button class="btn btn-secondary btn-large" onclick="addToWatchlist(1)">
+                            <i class="fas fa-plus"></i> My List
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 2 -->
+            <div class="hero-slide" data-index="1">
+                <img src="https://image.tmdb.org/t/p/original/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg" 
+                     alt="Featured Movie 2" class="hero-bg" loading="lazy">
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <span class="hero-badge">New Release</span>
+                    <h1 class="hero-title">Midnight Chronicles</h1>
+                    <p class="hero-meta">
+                        <span class="rating"><i class="fas fa-star"></i> 9.1</span>
+                        <span class="year">2024</span>
+                        <span class="duration">1h 58m</span>
+                        <span class="genre">Thriller • Mystery</span>
+                    </p>
+                    <p class="hero-description">
+                        When darkness falls, secrets emerge. A gripping tale of suspense that will 
+                        keep you on the edge of your seat until the very last frame.
+                    </p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary btn-large" onclick="playContent(2)">
+                            <i class="fas fa-play"></i> Watch Now
+                        </button>
+                        <button class="btn btn-secondary btn-large" onclick="addToWatchlist(2)">
+                            <i class="fas fa-plus"></i> My List
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Slide 3 -->
+            <div class="hero-slide" data-index="2">
+                <img src="https://image.tmdb.org/t/p/original/8rpDcsfLJypbO6vREc0547VKqEv.jpg" 
+                     alt="Featured Movie 3" class="hero-bg" loading="lazy">
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <span class="hero-badge">Trending</span>
+                    <h1 class="hero-title">Beyond the Stars</h1>
+                    <p class="hero-meta">
+                        <span class="rating"><i class="fas fa-star"></i> 8.8</span>
+                        <span class="year">2024</span>
+                        <span class="duration">2h 32m</span>
+                        <span class="genre">Sci-Fi • Drama</span>
+                    </p>
+                    <p class="hero-description">
+                        Humanity's greatest journey begins. Explore the unknown reaches of space 
+                        in this visually stunning epic about hope, sacrifice, and discovery.
+                    </p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary btn-large" onclick="playContent(3)">
+                            <i class="fas fa-play"></i> Watch Now
+                        </button>
+                        <button class="btn btn-secondary btn-large" onclick="addToWatchlist(3)">
+                            <i class="fas fa-plus"></i> My List
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Carousel Controls -->
+        <button class="hero-control hero-prev" id="heroPrev" aria-label="Previous slide">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="hero-control hero-next" id="heroNext" aria-label="Next slide">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        
+        <!-- Carousel Indicators -->
+        <div class="hero-indicators" id="heroIndicators">
+            <button class="indicator active" data-slide="0" aria-label="Go to slide 1"></button>
+            <button class="indicator" data-slide="1" aria-label="Go to slide 2"></button>
+            <button class="indicator" data-slide="2" aria-label="Go to slide 3"></button>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="content-main" id="contentMain">
+        <!-- Continue Watching -->
+        <section class="content-row" data-category="continue">
+            <div class="row-header">
+                <h2 class="row-title">Continue Watching</h2>
+                <a href="#" class="row-link">View All</a>
+            </div>
+            <div class="row-content" id="continueRow">
+                <!-- Cards will be injected by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Recommended For You -->
+        <section class="content-row" data-category="recommended">
+            <div class="row-header">
+                <h2 class="row-title">Recommended For You</h2>
+                <a href="#" class="row-link">View All</a>
+            </div>
+            <div class="row-content" id="recommendedRow">
+                <!-- Cards will be injected by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Trending Now -->
+        <section class="content-row" data-category="trending">
+            <div class="row-header">
+                <h2 class="row-title">Trending Now</h2>
+                <a href="#" class="row-link">View All</a>
+            </div>
+            <div class="row-content" id="trendingRow">
+                <!-- Cards will be injected by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Top Rated Movies -->
+        <section class="content-row" data-category="top-movies">
+            <div class="row-header">
+                <h2 class="row-title">Top Rated Movies</h2>
+                <a href="#" class="row-link">View All</a>
+            </div>
+            <div class="row-content" id="topMoviesRow">
+                <!-- Cards will be injected by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Because You Watched -->
+        <section class="content-row" data-category="because">
+            <div class="row-header">
+                <h2 class="row-title">Because You Watched <span class="highlight">Action Movie</span></h2>
+                <a href="#" class="row-link">View All</a>
+            </div>
+            <div class="row-content" id="becauseRow">
+                <!-- Cards will be injected by JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer main-footer">
+        <div class="container">
+            <p>&copy; 2024 WatchLy. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Help</a>
+                <a href="#">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/navigation.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/home.js"></script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WatchLy - Sign Up</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="auth-page">
+    <div class="auth-container">
+        <a href="index.html" class="auth-logo">WatchLy</a>
+        
+        <!-- Progress Indicator -->
+        <div class="progress-indicator">
+            <div class="progress-step active" data-step="1">
+                <span class="step-number">1</span>
+                <span class="step-label">Account</span>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step" data-step="2">
+                <span class="step-number">2</span>
+                <span class="step-label">Preferences</span>
+            </div>
+        </div>
+        
+        <!-- Step 1: Account Details -->
+        <div class="auth-box" id="step1">
+            <h1>Create your account</h1>
+            
+            <div id="registerError" class="alert alert-error"></div>
+            
+            <form id="registerForm" class="auth-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text" id="firstName" class="form-control" 
+                                   placeholder="John" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text" id="lastName" class="form-control" 
+                                   placeholder="Doe" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regEmail">Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" id="regEmail" class="form-control" 
+                               placeholder="john@example.com" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="regPassword">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="regPassword" class="form-control" 
+                               placeholder="Create a password" required 
+                               oninput="checkPasswordStrength(this.value)">
+                        <button type="button" class="toggle-password" 
+                                onclick="togglePassword('regPassword', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="password-strength">
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="strengthFill"></div>
+                        </div>
+                        <span class="strength-text" id="strengthText">Password strength</span>
+                    </div>
+                    
+                    <ul class="password-requirements">
+                        <li id="req-length"><i class="fas fa-circle"></i> At least 8 characters</li>
+                        <li id="req-upper"><i class="fas fa-circle"></i> One uppercase letter</li>
+                        <li id="req-number"><i class="fas fa-circle"></i> One number</li>
+                    </ul>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox-label terms-checkbox">
+                        <input type="checkbox" id="agreeTerms" required>
+                        <span>I agree to the <a href="#">Terms of Service</a> and 
+                        <a href="#">Privacy Policy</a></span>
+                    </label>
+                </div>
+                
+                <button type="button" class="btn btn-primary btn-block" onclick="goToStep2()">
+                    Continue
+                </button>
+            </form>
+            
+            <div class="divider"><span>or</span></div>
+            
+            <div class="social-login">
+                <button class="btn btn-social btn-google" onclick="socialRegister('google')">
+                    <i class="fab fa-google"></i> Sign up with Google
+                </button>
+                <button class="btn btn-social btn-facebook" onclick="socialRegister('facebook')">
+                    <i class="fab fa-facebook-f"></i> Sign up with Facebook
+                </button>
+            </div>
+            
+            <p class="auth-footer">Already have an account? <a href="login.html">Sign in</a></p>
+        </div>
+        
+        <!-- Step 2: Preferences -->
+        <div class="auth-box" id="step2" style="display: none;">
+            <h1>Personalize your experience</h1>
+            <p class="subtitle">Select your favorite genres</p>
+            
+            <form id="preferencesForm" class="auth-form">
+                <div class="form-group">
+                    <label class="form-label">What would you like to watch?</label>
+                    <div class="genre-grid">
+                        <label class="genre-option">
+                            <input type="checkbox" name="genre" value="Action">
+                            <span>Action</span>
+                        </label>
+                        <label class="genre-option">
+                            <input type="checkbox" name="genre" value="Comedy">
+                            <span>Comedy</span>
+                        </label>
+                        <label class="genre-option">
+                            <input type="checkbox" name="genre" value="Drama">
+                            <span>Drama</span>
+                        </label>
+                        <label class="genre-option">
+                            <input type="checkbox" name="genre" value="Horror">
+                            <span>Horror</span>
+                        </label>
+                        <label class="genre-option">
+                            <input type="checkbox" name="genre" value="Sci-Fi">
+                            <span>Sci-Fi</span>
+                        </label>
+                        <label class="genre-option">
+                            <input type="checkbox" name="genre" value="Romance">
+                            <span>Romance</span>
+                        </label>
+                        <label class="genre-option">
+                            <input type="checkbox" name="genre" value="Thriller">
+                            <span>Thriller</span>
+                        </label>
+                        <label class="genre-option">
+                            <input type="checkbox" name="genre" value="Documentary">
+                            <span>Documentary</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contentRating">Content Rating Preference</label>
+                    <select id="contentRating" class="form-control">
+                        <option value="all">All Ratings (G, PG, PG-13, R)</option>
+                        <option value="pg13">PG-13 and below</option>
+                        <option value="pg">PG and below</option>
+                        <option value="g">G only</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">
+                    Complete Registration
+                </button>
+                <button type="button" class="btn btn-secondary btn-block" onclick="goBackToStep1()">
+                    Back
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="js/auth.js"></script>
+    <script>
+        function togglePassword(inputId, btn) {
+            const input = document.getElementById(inputId);
+            const icon = btn.querySelector('i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+        
+        function checkPasswordStrength(password) {
+            const fill = document.getElementById('strengthFill');
+            const text = document.getElementById('strengthText');
+            
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+            
+            fill.className = 'strength-fill';
+            if (strength <= 2) {
+                fill.classList.add('weak');
+                text.textContent = 'Weak';
+            } else if (strength <= 3) {
+                fill.classList.add('fair');
+                text.textContent = 'Fair';
+            } else {
+                fill.classList.add('good');
+                text.textContent = 'Strong';
+            }
+            
+            document.getElementById('req-length').classList.toggle('met', password.length >= 8);
+            document.getElementById('req-upper').classList.toggle('met', /[A-Z]/.test(password));
+            document.getElementById('req-number').classList.toggle('met', /[0-9]/.test(password));
+        }
+        
+        function goToStep2() {
+            const form = document.getElementById('registerForm');
+            if (form.checkValidity()) {
+                document.getElementById('step1').style.display = 'none';
+                document.getElementById('step2').style.display = 'block';
+                document.querySelector('[data-step="1"]').classList.remove('active');
+                document.querySelector('[data-step="2"]').classList.add('active');
+            } else {
+                form.reportValidity();
+            }
+        }
+        
+        function goBackToStep1() {
+            document.getElementById('step2').style.display = 'none';
+            document.getElementById('step1').style.display = 'block';
+            document.querySelector('[data-step="2"]').classList.remove('active');
+            document.querySelector('[data-step="1"]').classList.add('active');
+        }
+        
+        function socialRegister(provider) {
+            alert(`Signing up with ${provider}...`);
+        }
+    </script>
+</body>
+</html>
