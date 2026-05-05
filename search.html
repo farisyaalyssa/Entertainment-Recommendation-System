@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WatchLy — Search</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+
+   <nav class="navbar navbar-expand-lg" id="main-navbar">
+
+    <!-- LEFT — WatchLy logo -->
+    <a class="navbar-brand" href="home.html">WatchLy</a>
+
+    <!-- RIGHT — nav links + avatar -->
+    <div class="d-flex align-items-center ml-auto" id="nav-links">
+        <a href="home.html" class="nav-link">Home</a>
+        <a href="movies.html" class="nav-link">Movies</a>
+        <a href="tvshows.html" class="nav-link">TV Shows</a>
+        <a href="profile.html" class="nav-avatar">A</a>
+    </div>
+
+</nav>
+
+<section class="search-area">
+  <input type="text" id="searchInput" placeholder="Search movies or TV shows...">
+</section>
+
+<section class="filters">
+  <select id="genre">
+    <option value="">Genre</option>
+    <option value="Action">Action</option>
+    <option value="Romance">Romance</option>
+    <option value="Comedy">Comedy</option>
+    <option value="Drama">Drama</option>
+  </select>
+
+  <select id="rating">
+    <option value="">Rating</option>
+    <option value="9">9+</option>
+    <option value="8">8+</option>
+    <option value="7">7+</option>
+  </select>
+
+  <button onclick="search()">Search</button>
+</section>
+
+<section id="results"></section>
+
+<script src="search.js"></script>
+<script>
+    function goToSearch() {
+        var query = document.getElementById('nav-search-input').value.trim();
+        if (query) {
+            window.location.href = 'search.html?q=' + encodeURIComponent(query);
+        }
+    }
+</script>
+</body>
+</html>
