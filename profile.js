@@ -108,4 +108,33 @@ window.addEventListener('load', function() {
     document.getElementById('edit-profile-modal').addEventListener('click', function(e) {
         if (e.target === this) closeEditProfileModal();
     });
+    document.getElementById('preferences-modal').addEventListener('click', function(e) {
+    if (e.target === this) closePreferencesModal();
 });
+});
+
+// ── Preferences Modal ──────────────────────────
+function openPreferencesModal() {
+    document.getElementById('preferences-modal').style.display = 'flex';
+}
+
+function closePreferencesModal() {
+    document.getElementById('preferences-modal').style.display = 'none';
+}
+
+function toggleNotif(el) {
+    el.classList.toggle('toggle-on');
+}
+
+function savePreferences() {
+    var genres = [];
+    document.querySelectorAll('.genre-chip input:checked').forEach(function(cb) {
+        genres.push(cb.value);
+    });
+
+    var rating = document.querySelector('input[name="content-rating"]:checked');
+    var ratingVal = rating ? rating.value : 'All';
+
+    alert('Preferences saved!\nGenres: ' + (genres.length ? genres.join(', ') : 'None selected') + '\nRating: ' + ratingVal);
+    closePreferencesModal();
+}

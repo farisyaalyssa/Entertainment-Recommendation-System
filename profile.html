@@ -50,6 +50,13 @@
                 <a href="#" class="settings-link" onclick="openChangePasswordModal()">
                     Change Password
                 </a>
+                <hr class="profile-divider">
+
+                <p class="settings-label">Preferences</p>
+
+                <a href="#" class="settings-link" onclick="openPreferencesModal()">
+                    Manage Preferences
+                </a>
                 <a href="#" class="settings-link danger-link" onclick="openDeleteModal()">
                     Deactivate / Delete Account
                 </a>
@@ -58,71 +65,145 @@
 
             <div class="col-lg-9 col-md-8" id="right-section">
 
-                <ul class="nav" id="profile-tabs">
-                    <li class="nav-item">
-                        <a class="tab-link active-tab" href="#" onclick="switchTab('watchlist', this)">My Watchlist</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="tab-link" href="#" onclick="switchTab('reviews', this)">My Reviews</a>
-                    </li>
-                </ul>
+    <ul class="nav" id="profile-tabs">
+        <li class="nav-item">
+            <a class="tab-link active-tab" href="#" onclick="switchTab('watchlist', this)">My Watchlist</a>
+        </li>
+        <li class="nav-item">
+            <a class="tab-link" href="#" onclick="switchTab('reviews', this)">My Reviews</a>
+        </li>
+        <li class="nav-item">
+            <a class="tab-link" href="#" onclick="switchTab('favourites', this)">Favourites</a>
+        </li>
+        <li class="nav-item">
+            <a class="tab-link" href="#" onclick="switchTab('history', this)">Watch History</a>
+        </li>
+    </ul>
 
-                <div id="watchlist" class="tab-content">
-                    <div class="row mt-3">
-                        <div class="col-lg-3 col-md-4 col-6 mb-4">
-                            <div class="movie-card">
-                                <div class="movie-poster">Movie 1</div>
-                                <p class="movie-title">Inception</p>
-                                <p class="movie-year">2010</p>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-6 mb-4">
-                            <div class="movie-card">
-                                <div class="movie-poster">Movie 2</div>
-                                <p class="movie-title">Interstellar</p>
-                                <p class="movie-year">2014</p>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-6 mb-4">
-                            <div class="movie-card">
-                                <div class="movie-poster">Movie 3</div>
-                                <p class="movie-title">The Dark Knight</p>
-                                <p class="movie-year">2008</p>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-4 col-6 mb-4">
-                            <div class="movie-card">
-                                <div class="movie-poster">Movie 4</div>
-                                <p class="movie-title">Dune</p>
-                                <p class="movie-year">2021</p>
-                            </div>
-                        </div>
-                    </div>
+    <!-- WATCHLIST TAB -->
+     <div id="watchlist" class="tab-content">
+    <div class="row mt-3">
+        <div class="col-lg-3 col-md-4 col-6 mb-4">
+            <div class="movie-card" onclick="window.location.href='content-detail.html?id=27205&type=movie'">
+                <img src="https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg" class="movie-poster-img" alt="Inception">
+                <p class="movie-title">Inception</p>
+                <p class="movie-year">2010</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-6 mb-4">
+            <div class="movie-card" onclick="window.location.href='content-detail.html?id=157336&type=movie'">
+                <img src="https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" class="movie-poster-img" alt="Interstellar">
+                <p class="movie-title">Interstellar</p>
+                <p class="movie-year">2014</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-6 mb-4">
+            <div class="movie-card" onclick="window.location.href='content-detail.html?id=155&type=movie'">
+                <img src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" class="movie-poster-img" alt="The Dark Knight">
+                <p class="movie-title">The Dark Knight</p>
+                <p class="movie-year">2008</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-6 mb-4">
+            <div class="movie-card" onclick="window.location.href='content-detail.html?id=438631&type=movie'">
+                <img src="https://image.tmdb.org/t/p/w500/d5NXSklpcvkC173QCnEh3w0VBgX.jpg" class="movie-poster-img" alt="Dune">
+                <p class="movie-title">Dune</p>
+                <p class="movie-year">2021</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <!-- REVIEWS TAB -->
+    <div id="reviews" class="tab-content" style="display: none;">
+        <div class="mt-3">
+            <div class="review-card mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <p class="review-title">Inception</p>
+                    <span class="review-rating">★★★★★</span>
                 </div>
-
-                <div id="reviews" class="tab-content" style="display: none;">
-                    <div class="mt-3">
-                        <div class="review-card mb-3">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <p class="review-title">Inception</p>
-                                <span class="review-rating">★★★★★</span>
-                            </div>
-                            <p class="review-text">An absolute masterpiece. The layers of the dream world are so well constructed.</p>
-                        </div>
-                        <div class="review-card mb-3">
-                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                <p class="review-title">Interstellar</p>
-                                <span class="review-rating">★★★★☆</span>
-                            </div>
-                            <p class="review-text">Visually stunning. The science is mind-bending and the emotional core really lands.</p>
-                        </div>
-                    </div>
+                <p class="review-text">An absolute masterpiece. The layers of the dream world are so well constructed.</p>
+            </div>
+            <div class="review-card mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <p class="review-title">Interstellar</p>
+                    <span class="review-rating">★★★★☆</span>
                 </div>
-
+                <p class="review-text">Visually stunning. The science is mind-bending and the emotional core really lands.</p>
             </div>
         </div>
     </div>
 
+    <!-- FAVOURITES TAB -->
+    <div id="favourites" class="tab-content" style="display: none;">
+        <div class="row mt-3">
+            <div class="col-lg-3 col-md-4 col-6 mb-4">
+            <div class="movie-card" onclick="window.location.href='content-detail.html?id=27205&type=movie'">
+                <img src="https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg" class="movie-poster-img" alt="Inception">
+                <p class="movie-title">Inception</p>
+                <p class="movie-year">2010</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-6 mb-4">
+            <div class="movie-card" onclick="window.location.href='content-detail.html?id=157336&type=movie'">
+                <img src="https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" class="movie-poster-img" alt="Interstellar">
+                <p class="movie-title">Interstellar</p>
+                <p class="movie-year">2014</p>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-4 col-6 mb-4">
+            <div class="movie-card" onclick="window.location.href='content-detail.html?id=155&type=movie'">
+                <img src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" class="movie-poster-img" alt="The Dark Knight">
+                <p class="movie-title">The Dark Knight</p>
+                <p class="movie-year">2008</p>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- WATCH HISTORY TAB -->
+    <div id="history" class="tab-content" style="display: none;">
+        <div class="mt-3">
+            <div class="history-card mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <div class="history-poster mr-3">M</div>
+                        <div>
+                            <p class="history-title">Inception</p>
+                            <p class="history-meta">Action · 2010</p>
+                        </div>
+                    </div>
+                    <p class="history-date">2 days ago</p>
+                </div>
+            </div>
+            <div class="history-card mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <div class="history-poster mr-3">D</div>
+                        <div>
+                            <p class="history-title">Dune</p>
+                            <p class="history-meta">Sci-Fi · 2021</p>
+                        </div>
+                    </div>
+                    <p class="history-date">5 days ago</p>
+                </div>
+            </div>
+            <div class="history-card mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <div class="history-poster mr-3">T</div>
+                        <div>
+                            <p class="history-title">The Dark Knight</p>
+                            <p class="history-meta">Action · 2008</p>
+                        </div>
+                    </div>
+                    <p class="history-date">1 week ago</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
     <!-- CHANGE PASSWORD MODAL -->
     <div id="password-modal" class="modal-overlay" style="display: none;">
         <div class="modal-box">
@@ -219,6 +300,121 @@
             </div>
         </div>
     </div>
+
+    <!-- MANAGE PREFERENCES MODAL -->
+<div id="preferences-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-box">
+
+        <div class="modal-header">
+            <h5 class="modal-title">Manage Preferences</h5>
+            <button class="modal-close" onclick="closePreferencesModal()">&#10005;</button>
+        </div>
+
+        <div class="modal-body">
+
+            <!-- Favourite Genres -->
+            <div class="form-group">
+                <label class="form-label">Favourite Genres</label>
+                <div class="genre-grid">
+                    <label class="genre-chip">
+                        <input type="checkbox" value="Action"> Action
+                    </label>
+                    <label class="genre-chip">
+                        <input type="checkbox" value="Comedy"> Comedy
+                    </label>
+                    <label class="genre-chip">
+                        <input type="checkbox" value="Drama"> Drama
+                    </label>
+                    <label class="genre-chip">
+                        <input type="checkbox" value="Horror"> Horror
+                    </label>
+                    <label class="genre-chip">
+                        <input type="checkbox" value="Romance"> Romance
+                    </label>
+                    <label class="genre-chip">
+                        <input type="checkbox" value="Sci-Fi"> Sci-Fi
+                    </label>
+                    <label class="genre-chip">
+                        <input type="checkbox" value="Thriller"> Thriller
+                    </label>
+                    <label class="genre-chip">
+                        <input type="checkbox" value="Animation"> Animation
+                    </label>
+                </div>
+            </div>
+
+            <hr class="modal-divider">
+
+            <!-- Content Rating Filter -->
+            <div class="form-group">
+                <label class="form-label">Content Rating</label>
+                <p class="pref-desc">Only show content up to this rating</p>
+                <div class="rating-options">
+                    <label class="rating-chip">
+                        <input type="radio" name="content-rating" value="G"> G
+                    </label>
+                    <label class="rating-chip">
+                        <input type="radio" name="content-rating" value="PG"> PG
+                    </label>
+                    <label class="rating-chip">
+                        <input type="radio" name="content-rating" value="PG-13"> PG-13
+                    </label>
+                    <label class="rating-chip">
+                        <input type="radio" name="content-rating" value="R" checked> R
+                    </label>
+                    <label class="rating-chip">
+                        <input type="radio" name="content-rating" value="All"> All
+                    </label>
+                </div>
+            </div>
+
+            <hr class="modal-divider">
+
+            <!-- Notifications -->
+            <div class="form-group">
+                <label class="form-label">Notifications</label>
+
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <p class="toggle-title">New Recommendations</p>
+                        <p class="toggle-desc">Get notified when new picks match your taste</p>
+                    </div>
+                    <div class="toggle-switch toggle-on" id="notif-recommendations" onclick="toggleNotif(this)">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <p class="toggle-title">Watchlist Reminders</p>
+                        <p class="toggle-desc">Remind me about movies in my watchlist</p>
+                    </div>
+                    <div class="toggle-switch" id="notif-watchlist" onclick="toggleNotif(this)">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <p class="toggle-title">New Releases</p>
+                        <p class="toggle-desc">Notify me when new movies or shows are added</p>
+                    </div>
+                    <div class="toggle-switch" id="notif-releases" onclick="toggleNotif(this)">
+                        <div class="toggle-knob"></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closePreferencesModal()">Cancel</button>
+            <button class="btn-save" onclick="savePreferences()">Save Changes</button>
+        </div>
+
+    </div>
+</div>
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script src="profile.js"></script>
