@@ -51,26 +51,38 @@
                 <p id="detail-overview" class="detail-overview"></p>
 
                 <!-- Action buttons -->
+                <!-- Action buttons -->
                 <div class="detail-actions">
                     <button class="btn-watchlist" id="watchlist-btn" onclick="toggleWatchlist()">
                         + Add to Watchlist
+                    </button>
+                    <button class="btn-favourite" id="favourite-btn" onclick="toggleFavourite()">
+                        ♡ Add to Favourites
+                    </button>
+                    <button class="btn-watched" id="watched-btn" onclick="toggleWatched()">
+                        Mark as Watched
                     </button>
                 </div>
 
                 <hr class="profile-divider">
 
                 <!-- RATE -->
-                <div class="detail-section">
-                    <p class="detail-section-title">Rate this</p>
-                    <div class="star-rating" id="star-rating">
-                        <span class="star" onclick="setRating(1)">★</span>
-                        <span class="star" onclick="setRating(2)">★</span>
-                        <span class="star" onclick="setRating(3)">★</span>
-                        <span class="star" onclick="setRating(4)">★</span>
-                        <span class="star" onclick="setRating(5)">★</span>
-                    </div>
-                    <p class="rating-feedback" id="rating-feedback"></p>
-                </div>
+<div class="detail-section">
+    <p class="detail-section-title">Rate this</p>
+    <div class="star-rating" id="star-rating">
+        <span class="star" onclick="setRating(1)">★</span>
+        <span class="star" onclick="setRating(2)">★</span>
+        <span class="star" onclick="setRating(3)">★</span>
+        <span class="star" onclick="setRating(4)">★</span>
+        <span class="star" onclick="setRating(5)">★</span>
+        <span class="star" onclick="setRating(6)">★</span>
+        <span class="star" onclick="setRating(7)">★</span>
+        <span class="star" onclick="setRating(8)">★</span>
+        <span class="star" onclick="setRating(9)">★</span>
+        <span class="star" onclick="setRating(10)">★</span>
+    </div>
+    <p class="rating-feedback" id="rating-feedback"></p>
+</div>
 
                 <hr class="profile-divider">
 
@@ -94,7 +106,7 @@
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script>
-        // ── REPLACE THIS WITH YOUR NEW TMDB API KEY ──
+        
         var API_KEY = '9702460f55f5b08f0ad2c93b27dcebf3';
         var BASE_URL = 'https://api.themoviedb.org/3';
         var IMG_URL = 'https://image.tmdb.org/t/p/';
@@ -173,7 +185,7 @@
             inWatchlist = !inWatchlist;
             var btn = document.getElementById('watchlist-btn');
             if (inWatchlist) {
-                btn.textContent = '✓ In Watchlist';
+                btn.textContent = 'Added to Watchlist';
                 btn.classList.add('btn-watchlist-added');
             } else {
                 btn.textContent = '+ Add to Watchlist';
@@ -181,19 +193,47 @@
             }
         }
 
+        // ── FAVOURITE ──────────────────────────────────
+var inFavourites = false;
+
+function toggleFavourite() {
+    inFavourites = !inFavourites;
+    var btn = document.getElementById('favourite-btn');
+    if (inFavourites) {
+        btn.textContent = '♥ Added to Favourites';
+        btn.classList.add('btn-favourite-added');
+    } else {
+        btn.textContent = '♡ Add to Favourites';
+        btn.classList.remove('btn-favourite-added');
+    }
+}
+
+// ── MARK AS WATCHED ────────────────────────────
+var isWatched = false;
+
+function toggleWatched() {
+    isWatched = !isWatched;
+    var btn = document.getElementById('watched-btn');
+    if (isWatched) {
+        btn.textContent = 'Watched';
+        btn.classList.add('btn-watched-added');
+    } else {
+        btn.textContent = 'Mark as Watched';
+        btn.classList.remove('btn-watched-added');
+    }
+}
+
         // ── STAR RATING ────────────────────────────
         function setRating(val) {
-            currentRating = val;
-            var stars = document.querySelectorAll('.star');
-            stars.forEach(function(star, index) {
-                star.classList.toggle('star-filled', index < val);
-            });
-            var labels = ['', 'Poor', 'Fair', 'Good', 'Great', 'Excellent'];
-            document.getElementById('rating-feedback').textContent = val + '/5 — ' + labels[val];
-
-            // save rating
-            localStorage.setItem('rating-' + contentId, val);
-        }
+    currentRating = val;
+    var stars = document.querySelectorAll('.star');
+    stars.forEach(function(star, index) {
+        star.classList.toggle('star-filled', index < val);
+    });
+    var labels = ['', 'Terrible', 'Bad', 'Poor', 'Below Average', 'Average', 'Fine', 'Good', 'Great', 'Excellent', 'Masterpiece'];
+    document.getElementById('rating-feedback').textContent = val + '/10 — ' + labels[val];
+    localStorage.setItem('rating-' + contentId, val);
+}
 
         // load saved rating if exists
         function loadSavedRating() {
