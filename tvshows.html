@@ -25,8 +25,7 @@
         .page-header h2 { color: #fff; font-size: 32px; font-weight: 700; margin: 0 0 8px; }
         .page-header p { color: #aaa; font-size: 16px; margin: 0; }
         .genre-section { margin-bottom: 48px; padding: 0 60px; }
-        .genre-title { color: #fff; font-size: 20px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        .genre-title i { color: #F63049; }
+        .genre-title { color: #fff; font-size: 20px; font-weight: 600; margin-bottom: 20px; }
         .movie-card { cursor: pointer; transition: transform 0.3s; }
         .movie-card:hover { transform: translateY(-5px); }
         .movie-poster-img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 8px; margin-bottom: 8px; }
@@ -55,19 +54,19 @@
 
     <div class="container-fluid px-4">
         <section class="genre-section">
-            <h3 class="genre-title"><i class="fas fa-theater-masks"></i> Drama</h3>
+            <h3 class="genre-title">Drama</h3>
             <div class="row" id="dramaShows"></div>
         </section>
         <section class="genre-section">
-            <h3 class="genre-title"><i class="fas fa-laugh"></i> Comedy</h3>
+            <h3 class="genre-title">Comedy</h3>
             <div class="row" id="comedyShows"></div>
         </section>
         <section class="genre-section">
-            <h3 class="genre-title"><i class="fas fa-rocket"></i> Sci-Fi</h3>
+            <h3 class="genre-title">Sci-Fi</h3>
             <div class="row" id="scifiShows"></div>
         </section>
         <section class="genre-section">
-            <h3 class="genre-title"><i class="fas fa-bolt"></i> Action & Adventure</h3>
+            <h3 class="genre-title">Action & Adventure</h3>
             <div class="row" id="actionShows"></div>
         </section>
     </div>
@@ -107,7 +106,7 @@
                 <div class="col-lg-3 col-md-4 col-6 mb-4">
                     <a href="content-detail.html?id=${s.id}&type=tv" style="text-decoration:none;color:inherit;">
                         <div class="movie-card">
-                            <img src="${s.poster}" class="movie-poster-img" alt="${s.title}" onerror="this.src='https://via.placeholder.com/200x300/1a2d47/F63049?text=${encodeURIComponent(s.title)}'">
+                            <img src="${s.poster}" class="movie-poster-img" alt="${s.title}" onerror="this.onerror=null; this.src='https://via.placeholder.com/200x300/1a2d47/F63049?text=${encodeURIComponent(s.title)}';">
                             <p class="movie-title">${s.title}</p>
                             <p class="movie-year">${s.year}</p>
                         </div>
