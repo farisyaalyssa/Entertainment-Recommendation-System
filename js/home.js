@@ -1,456 +1,165 @@
 /**
- * WatchLy - Home Page Module
- * Handles hero carousel, content rows, and user interactions
+ * WatchLy - Home Page Content Loader
+ * Uses static mock data with correct TMDB image URLs
  */
 
-const Home = (() => {
-    // Configuration
-    const CONFIG = {
-        carousel: {
-            interval: 6000,
-            transition: 800
-        },
-        content: {
-            cardsPerRow: { desktop: 6, tablet: 4, mobile: 3 }
-        }
-    };
+// Mock data with CORRECT TMDB posters that match the titles
+const homeContent = {
+    continue: [
+        { id: 155, title: "The Dark Knight", year: 2008, progress: 65, poster: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" },
+        { id: 27205, title: "Inception", year: 2010, progress: 30, poster: "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg" },
+        { id: 157336, title: "Interstellar", year: 2014, progress: 85, poster: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" },
+        { id: 438631, title: "Dune", year: 2021, progress: 12, poster: "https://image.tmdb.org/t/p/w500/d5NXSklpcvkC173QCnEh3w0VBgX.jpg" }
+    ],
+    recommended: [
+        { id: 550, title: "Fight Club", year: 1999, rating: 8.8, poster: "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg" },
+        { id: 13, title: "Forrest Gump", year: 1994, rating: 8.8, poster: "https://image.tmdb.org/t/p/w500/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg" },
+        { id: 680, title: "Pulp Fiction", year: 1994, rating: 8.9, poster: "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg" },
+        { id: 424, title: "Schindler's List", year: 1993, rating: 9.0, poster: "https://image.tmdb.org/t/p/w500/sF1U4EUQS8YHUYjNl3pTXMYXKd.jpg" },
+        { id: 389, title: "12 Angry Men", year: 1957, rating: 9.0, poster: "https://image.tmdb.org/t/p/w500/ow3wq89wM8qd5X7hWKxiRfsFf9C.jpg" },
+        { id: 19404, title: "Dilwale Dulhania Le Jayenge", year: 1995, rating: 8.7, poster: "https://image.tmdb.org/t/p/w500/2CAL2433ZeIihfX1Hb2139CX0pW.jpg" }
+    ],
+    trending: [
+        { id: 94997, title: "House of the Dragon", year: 2022, rating: 8.5, poster: "https://image.tmdb.org/t/p/w500/7QMsOTMUswlwxJP0rTTZfmz2tX2.jpg" },
+        { id: 85271, title: "WandaVision", year: 2021, rating: 8.4, poster: "https://image.tmdb.org/t/p/w500/glKDfE6btIRcVB5zrjspRIs4r52.jpg" },
+        { id: 60735, title: "The Flash", year: 2023, rating: 7.0, poster: "https://image.tmdb.org/t/p/w500/rktDFPbfHfUbArZ6OOOKsXcv0Bm.jpg" },
+        { id: 76479, title: "The Boys", year: 2019, rating: 8.7, poster: "https://image.tmdb.org/t/p/w500/stTEycfG9928HYGEISBFaG1ngjM.jpg" },
+        { id: 1396, title: "Breaking Bad", year: 2008, rating: 9.5, poster: "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg" },
+        { id: 1668, title: "Friends", year: 1994, rating: 8.9, poster: "https://image.tmdb.org/t/p/w500/f496cm9enuEsZkSPzCwnGSEKJwv.jpg" }
+    ],
+    topMovies: [
+        { id: 238, title: "The Godfather", year: 1972, rating: 9.2, poster: "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg" },
+        { id: 278, title: "The Shawshank Redemption", year: 1994, rating: 9.3, poster: "https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg" },
+        { id: 424, title: "Schindler's List", year: 1993, rating: 9.0, poster: "https://image.tmdb.org/t/p/w500/sF1U4EUQS8YHUYjNl3pTXMYXKd.jpg" },
+        { id: 389, title: "12 Angry Men", year: 1957, rating: 9.0, poster: "https://image.tmdb.org/t/p/w500/ow3wq89wM8qd5X7hWKxiRfsFf9C.jpg" },
+        { id: 129, title: "Spirited Away", year: 2001, rating: 8.6, poster: "https://image.tmdb.org/t/p/w500/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg" },
+        { id: 155, title: "The Dark Knight", year: 2008, rating: 9.0, poster: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" }
+    ],
+    because: [
+        { id: 245891, title: "John Wick", year: 2014, rating: 7.4, poster: "https://image.tmdb.org/t/p/w500/fZPSd91yGE9fCcCe6OoQr6E3Bev.jpg" },
+        { id: 324857, title: "Spider-Man: Into the Spider-Verse", year: 2018, rating: 8.4, poster: "https://image.tmdb.org/t/p/w500/iiZZdoQBEYBv6id8su7ImL0oCbD.jpg" },
+        { id: 299536, title: "Avengers: Infinity War", year: 2018, rating: 8.3, poster: "https://image.tmdb.org/t/p/w500/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg" },
+        { id: 299534, title: "Avengers: Endgame", year: 2019, rating: 8.4, poster: "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg" },
+        { id: 1726, title: "Iron Man", year: 2008, rating: 7.9, poster: "https://image.tmdb.org/t/p/w500/78lPtwv72eTNqFW9COBYI0dWDJa.jpg" },
+        { id: 1771, title: "Captain America: The First Avenger", year: 2011, rating: 7.0, poster: "https://image.tmdb.org/t/p/w500/vSNxAJTlD0r02V9sPYpOjqDZXUK.jpg" }
+    ]
+};
 
-    // State
-    let state = {
-        currentSlide: 0,
-        totalSlides: 3,
-        carouselTimer: null,
-        userData: null
-    };
+// Render a row of content cards
+function renderContentRow(containerId, items, hasProgress = false) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
 
-    // DOM Elements (cached)
-    const elements = {};
-
-    /**
-     * Initialize the home page
-     */
-    function init() {
-        cacheElements();
-        loadUserData();
-        setupEventListeners();
-        initHeroCarousel();
-        populateContentRows();
-        setupScrollEffects();
-    }
-
-    /**
-     * Cache DOM elements for performance
-     */
-    function cacheElements() {
-        elements.hero = {
-            slides: document.querySelectorAll('.hero-slide'),
-            indicators: document.querySelectorAll('.indicator'),
-            prevBtn: document.getElementById('heroPrev'),
-            nextBtn: document.getElementById('heroNext'),
-            indicatorsContainer: document.getElementById('heroIndicators')
-        };
-        
-        elements.nav = {
-            navbar: document.getElementById('mainNavbar'),
-            searchBox: document.getElementById('searchBox'),
-            searchToggle: document.getElementById('searchToggle'),
-            searchClose: document.getElementById('searchClose'),
-            searchInput: document.getElementById('searchInput'),
-            avatarBtn: document.getElementById('avatarBtn'),
-            userDropdown: document.getElementById('userDropdown')
-        };
-        
-        elements.rows = {
-            continue: document.getElementById('continueRow'),
-            recommended: document.getElementById('recommendedRow'),
-            trending: document.getElementById('trendingRow'),
-            topMovies: document.getElementById('topMoviesRow'),
-            because: document.getElementById('becauseRow')
-        };
-    }
-
-    /**
-     * Load user data from localStorage
-     */
-    function loadUserData() {
-        try {
-            const session = localStorage.getItem('watchly_session');
-            const preferences = localStorage.getItem('watchly_preferences');
-            
-            if (session) {
-                state.userData = JSON.parse(session).user;
-                updateAvatar();
-            }
-            
-            if (preferences) {
-                const prefs = JSON.parse(preferences);
-                personalizeContent(prefs);
-            }
-        } catch (error) {
-            console.warn('Failed to load user data:', error);
-        }
-    }
-
-    /**
-     * Update user avatar in navbar
-     */
-    function updateAvatar() {
-        if (state.userData?.name && elements.nav.avatarBtn) {
-            const initial = state.userData.name.charAt(0).toUpperCase();
-            document.getElementById('userAvatar').textContent = initial;
-        }
-    }
-
-    /**
-     * Personalize content based on user preferences
-     */
-    function personalizeContent(preferences) {
-        // This would fetch personalized content from API
-        // For now, we'll just log it
-        console.log('Personalizing for genres:', preferences.genres);
-    }
-
-    /**
-     * Setup all event listeners
-     */
-    function setupEventListeners() {
-        // Hero carousel controls
-        if (elements.hero.prevBtn) {
-            elements.hero.prevBtn.addEventListener('click', () => goToSlide(state.currentSlide - 1));
-        }
-        if (elements.hero.nextBtn) {
-            elements.hero.nextBtn.addEventListener('click', () => goToSlide(state.currentSlide + 1));
-        }
-        
-        // Hero indicators
-        elements.hero.indicators.forEach(indicator => {
-            indicator.addEventListener('click', (e) => {
-                const slideIndex = parseInt(e.target.dataset.slide);
-                goToSlide(slideIndex);
-            });
-        });
-        
-        // Search functionality
-        if (elements.nav.searchToggle) {
-            elements.nav.searchToggle.addEventListener('click', toggleSearch);
-        }
-        if (elements.nav.searchClose) {
-            elements.nav.searchClose.addEventListener('click', toggleSearch);
-        }
-        if (elements.nav.searchInput) {
-            elements.nav.searchInput.addEventListener('keypress', handleSearchSubmit);
-        }
-        
-        // User dropdown
-        if (elements.nav.avatarBtn) {
-            elements.nav.avatarBtn.addEventListener('click', toggleUserDropdown);
-        }
-        
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.user-menu') && elements.nav.userDropdown) {
-                elements.nav.userDropdown.classList.remove('show');
-            }
-        });
-        
-        // Keyboard navigation
-        document.addEventListener('keydown', handleKeyboardNav);
-        
-        // Window resize
-        window.addEventListener('resize', Utils.debounce(handleResize, 250));
-    }
-
-    /**
-     * Initialize hero carousel
-     */
-    function initHeroCarousel() {
-        state.totalSlides = elements.hero.slides.length;
-        startCarouselAutoPlay();
-    }
-
-    /**
-     * Start auto-play for carousel
-     */
-    function startCarouselAutoPlay() {
-        state.carouselTimer = setInterval(() => {
-            goToSlide(state.currentSlide + 1);
-        }, CONFIG.carousel.interval);
-    }
-
-    /**
-     * Stop carousel auto-play
-     */
-    function stopCarouselAutoPlay() {
-        if (state.carouselTimer) {
-            clearInterval(state.carouselTimer);
-            state.carouselTimer = null;
-        }
-    }
-
-    /**
-     * Go to specific slide
-     */
-    function goToSlide(index) {
-        // Wrap around
-        if (index < 0) index = state.totalSlides - 1;
-        if (index >= state.totalSlides) index = 0;
-        
-        // Update slides
-        elements.hero.slides.forEach((slide, i) => {
-            slide.classList.toggle('active', i === index);
-        });
-        
-        // Update indicators
-        elements.hero.indicators.forEach((indicator, i) => {
-            indicator.classList.toggle('active', i === index);
-        });
-        
-        // Update state
-        state.currentSlide = index;
-        
-        // Reset auto-play timer
-        stopCarouselAutoPlay();
-        startCarouselAutoPlay();
-    }
-
-    /**
-     * Toggle search box
-     */
-    function toggleSearch() {
-        elements.nav.searchBox.classList.toggle('active');
-        
-        if (elements.nav.searchBox.classList.contains('active')) {
-            elements.nav.searchInput.focus();
-            stopCarouselAutoPlay();
-        } else {
-            elements.nav.searchInput.value = '';
-            startCarouselAutoPlay();
-        }
-    }
-
-    /**
-     * Handle search submission
-     */
-    function handleSearchSubmit(e) {
-        if (e.key === 'Enter') {
-            const query = elements.nav.searchInput.value.trim();
-            if (query) {
-                performSearch(query);
-            }
-        }
-    }
-
-    /**
-     * Perform search (mock)
-     */
-    function performSearch(query) {
-        console.log('Searching for:', query);
-        // Redirect to search page in production
-        // window.location.href = `search.html?q=${encodeURIComponent(query)}`;
-        alert(`Searching for: ${query}`);
-    }
-
-    /**
-     * Toggle user dropdown menu
-     */
-    function toggleUserDropdown() {
-        elements.nav.userDropdown.classList.toggle('show');
-    }
-
-    /**
-     * Handle keyboard navigation
-     */
-    function handleKeyboardNav(e) {
-        // Close dropdown on Escape
-        if (e.key === 'Escape' && elements.nav.userDropdown?.classList.contains('show')) {
-            elements.nav.userDropdown.classList.remove('show');
-        }
-        
-        // Carousel navigation with arrow keys
-        if (e.key === 'ArrowLeft') {
-            goToSlide(state.currentSlide - 1);
-        } else if (e.key === 'ArrowRight') {
-            goToSlide(state.currentSlide + 1);
-        }
-    }
-
-    /**
-     * Handle window resize
-     */
-    function handleResize() {
-        // Could adjust cards per row based on screen size
-        console.log('Window resized');
-    }
-
-    /**
-     * Setup scroll effects for navbar
-     */
-    function setupScrollEffects() {
-        window.addEventListener('scroll', Utils.throttle(() => {
-            if (window.scrollY > 50) {
-                elements.nav.navbar?.classList.add('scrolled');
-            } else {
-                elements.nav.navbar?.classList.remove('scrolled');
-            }
-        }, 100));
-    }
-
-    /**
-     * Populate content rows with mock data
-     */
-    function populateContentRows() {
-        const mockData = {
-            continue: generateMockCards(5, 'continue'),
-            recommended: generateMockCards(10, 'recommended'),
-            trending: generateMockCards(10, 'trending'),
-            topMovies: generateMockCards(8, 'top'),
-            because: generateMockCards(10, 'because')
-        };
-        
-        Object.entries(mockData).forEach(([rowId, cards]) => {
-            const row = elements.rows[rowId];
-            if (row) {
-                row.innerHTML = cards.map(card => createCardHTML(card)).join('');
-                addCardEventListeners(row);
-            }
-        });
-    }
-
-    /**
-     * Generate mock card data
-     */
-    function generateMockCards(count, type) {
-        const titles = [
-            'Action Movie', 'Drama Series', 'Sci-Fi Adventure', 'Thriller',
-            'Comedy', 'Romance', 'Documentary', 'Horror', 'Fantasy', 'Animation'
-        ];
-        
-        const posters = [
-            '1E5baAaEse26fej7uHkjJDveEs7',
-            '8UlWHLMpgZm9bx6QYh0NFoq67TZ',
-            'q6y0Go1tsGEsmtFryDOJo3dEmqu',
-            'rCzpDGLbOoPwLjy3OAm5NUPOTrC',
-            '7WsyChQLEftFiDOVTGkv3hFpyyt',
-            'pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK',
-            'fiVW06jz8zRRHuhqaLHdJY4S7mE',
-            '8Vt6mWEReuy4Of61Lnj5Xj704m8',
-            '1NqwE6LP9IEdOZ57WCTHOxdNsH',
-            't6HIqrRAclMCA60NsSmeqe9RmNV'
-        ];
-        
-        return Array.from({ length: count }, (_, i) => ({
-            id: `${type}-${i}`,
-            title: titles[i % titles.length],
-            rating: (Math.random() * 2 + 7).toFixed(1),
-            poster: `https://image.tmdb.org/t/p/w500/${posters[i % posters.length]}.jpg`,
-            progress: type === 'continue' ? Math.floor(Math.random() * 100) : null
-        }));
-    }
-
-    /**
-     * Create card HTML
-     */
-    function createCardHTML(card) {
-        const progressHTML = card.progress 
-            ? `<div class="progress-bar" style="width: ${card.progress}%"></div>` 
+    container.innerHTML = items.map(item => {
+        const progressHTML = hasProgress && item.progress 
+            ? `<div class="progress-bar" style="width: ${item.progress}%"></div>` 
             : '';
-        
+        const ratingHTML = item.rating 
+            ? `<p><i class="fas fa-star"></i> ${item.rating}</p>` 
+            : '';
+
         return `
-            <article class="content-card ${card.progress ? 'has-progress' : ''}" 
-                     data-id="${card.id}" 
+            <article class="content-card ${hasProgress ? 'has-progress' : ''}" 
+                     data-id="${item.id}" 
                      tabindex="0"
                      role="button"
-                     aria-label="View ${card.title}">
-                <img src="${card.poster}" alt="${card.title}" loading="lazy">
+                     aria-label="View ${item.title}">
+                <img src="${item.poster}" 
+                     alt="${item.title}" 
+                     class="card-poster"
+                     loading="lazy"
+                     onerror="this.src='https://via.placeholder.com/185x278/1a2d47/F63049?text=${encodeURIComponent(item.title)}'">
                 ${progressHTML}
                 <div class="card-overlay">
-                    <h4>${card.title}</h4>
-                    <p><i class="fas fa-star"></i> ${card.rating}</p>
-                    <button class="btn-add" aria-label="Add ${card.title} to watchlist">
+                    <h4>${item.title}</h4>
+                    ${ratingHTML}
+                    <p class="card-year">${item.year}</p>
+                    <button class="btn-add" aria-label="Add ${item.title} to watchlist" onclick="event.stopPropagation(); addToWatchlist(${item.id})">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
             </article>
         `;
-    }
+    }).join('');
 
-    /**
-     * Add event listeners to cards
-     */
-    function addCardEventListeners(row) {
-        row.querySelectorAll('.content-card').forEach(card => {
-            card.addEventListener('click', (e) => {
-                if (!e.target.closest('.btn-add')) {
-                    const id = card.dataset.id;
-                    viewContent(id);
-                }
-            });
-            
-            card.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && !e.target.closest('.btn-add')) {
-                    const id = card.dataset.id;
-                    viewContent(id);
-                }
-            });
+    // Add click handlers to cards
+    container.querySelectorAll('.content-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+            if (!e.target.closest('.btn-add')) {
+                const id = card.dataset.id;
+                viewContent(id);
+            }
         });
-        
-        row.querySelectorAll('.btn-add').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const card = btn.closest('.content-card');
-                const id = card?.dataset.id;
-                addToWatchlist(id);
-            });
-        });
+    });
+}
+
+// View content details (placeholder)
+function viewContent(id) {
+    console.log('Viewing content:', id);
+    // For demo: alert instead of navigation
+    alert(`Opening details for content ID: ${id}`);
+    // In production: window.location.href = `content-detail.html?id=${id}&type=movie`;
+}
+
+// Add to watchlist (placeholder)
+function addToWatchlist(id) {
+    console.log('Added to watchlist:', id);
+    // Visual feedback
+    const btn = event?.target?.closest('.btn-add');
+    if (btn) {
+        const originalIcon = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i>';
+        btn.style.background = '#28a745';
+        setTimeout(() => {
+            btn.innerHTML = originalIcon;
+            btn.style.background = '';
+        }, 1200);
     }
+}
 
-    /**
-     * View content details
-     */
-    function viewContent(id) {
-        console.log('Viewing content:', id);
-        // window.location.href = `detail.html?id=${id}`;
-    }
-
-    /**
-     * Add to watchlist
-     */
-    function addToWatchlist(id) {
-        console.log('Added to watchlist:', id);
-        // Show feedback
-        const btn = event?.target?.closest('.btn-add');
-        if (btn) {
-            btn.innerHTML = '<i class="fas fa-check"></i>';
-            btn.style.background = 'var(--success-color)';
-            setTimeout(() => {
-                btn.innerHTML = '<i class="fas fa-plus"></i>';
-                btn.style.background = '';
-            }, 1500);
-        }
-    }
-
-    /**
-     * Play content (mock)
-     */
-    function playContent(id) {
-        console.log('Playing content:', id);
-        alert('Playing content... (This would launch the video player)');
-    }
-
-    // Public API
-    return {
-        init,
-        goToSlide,
-        addToWatchlist,
-        playContent
-    };
-})();
-
-// Initialize when DOM is ready
+// Initialize page
 document.addEventListener('DOMContentLoaded', () => {
-    Home.init();
+    // Render all content rows
+    renderContentRow('continueRow', homeContent.continue, true);
+    renderContentRow('recommendedRow', homeContent.recommended);
+    renderContentRow('trendingRow', homeContent.trending);
+    renderContentRow('topMoviesRow', homeContent.topMovies);
+    renderContentRow('becauseRow', homeContent.because);
+
+    // Setup hero carousel (basic version)
+    setupHeroCarousel();
 });
 
-// Make functions available globally for HTML onclick handlers
-window.addToWatchlist = Home.addToWatchlist;
-window.playContent = Home.playContent;
+// Basic hero carousel logic
+function setupHeroCarousel() {
+    const slides = document.querySelectorAll('.hero-slide');
+    const indicators = document.querySelectorAll('.indicator');
+    const prevBtn = document.getElementById('heroPrev');
+    const nextBtn = document.getElementById('heroNext');
+    
+    let current = 0;
+    const total = slides.length;
+
+    function goToSlide(index) {
+        slides.forEach(s => s.classList.remove('active'));
+        indicators.forEach(i => i.classList.remove('active'));
+        slides[index].classList.add('active');
+        indicators[index].classList.add('active');
+        current = index;
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', () => {
+        goToSlide((current - 1 + total) % total);
+    });
+    if (nextBtn) nextBtn.addEventListener('click', () => {
+        goToSlide((current + 1) % total);
+    });
+    indicators.forEach((ind, i) => {
+        ind.addEventListener('click', () => goToSlide(i));
+    });
+
+    // Auto-advance every 8 seconds
+    setInterval(() => {
+        goToSlide((current + 1) % total);
+    }, 8000);
+}

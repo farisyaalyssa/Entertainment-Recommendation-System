@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WatchLy — Movies</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        #main-navbar, .navbar { background-color: #0a1628; padding: 10px 32px; border-bottom: 1px solid #1e3050; display: flex; align-items: center; gap: 24px; position: sticky; top: 0; z-index: 1000; }
+        #main-navbar .navbar-brand { color: #F63049; font-weight: 700; font-size: 22px; white-space: nowrap; flex-shrink: 0; margin: 0; text-decoration: none; }
+        .nav-search { flex: 1; max-width: 520px; margin: 0 auto; display: flex; align-items: center; gap: 8px; }
+        .nav-search-input { flex: 1; background-color: #1a2d47; border: 1px solid #1e3050; border-radius: 8px; padding: 8px 14px; color: #ffffff; font-size: 13px; outline: none; }
+        .nav-search-input::placeholder { color: #555; }
+        .nav-search-input:focus { border-color: #F63049; }
+        .nav-search-btn { background-color: #F63049; color: #ffffff; border: none; border-radius: 8px; padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+        .nav-search-btn:hover { background-color: #d42a3f; }
+        #nav-links { flex-shrink: 0; display: flex; align-items: center; gap: 4px; }
+        #main-navbar .nav-link { color: #aaaaaa; font-size: 14px; padding: 6px 12px; text-decoration: none; white-space: nowrap; }
+        #main-navbar .nav-link:hover { color: #ffffff; }
+        #main-navbar .active-link { color: #ffffff; font-weight: 600; }
+        .nav-avatar { width: 34px; height: 34px; border-radius: 50%; background-color: #F63049; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-left: 8px; text-decoration: none; flex-shrink: 0; cursor: pointer; }
+        .page-header { padding: 40px 60px 20px; background: linear-gradient(to bottom, rgba(10,22,40,0.9), transparent); }
+        .page-header h2 { color: #fff; font-size: 32px; font-weight: 700; margin: 0 0 8px; }
+        .page-header p { color: #aaa; font-size: 16px; margin: 0; }
+        .genre-section { margin-bottom: 48px; padding: 0 60px; }
+        .genre-title { color: #fff; font-size: 20px; font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .genre-title i { color: #F63049; }
+        .movie-card { cursor: pointer; transition: transform 0.3s; }
+        .movie-card:hover { transform: translateY(-5px); }
+        .movie-poster-img { width: 100%; aspect-ratio: 2/3; object-fit: cover; border-radius: 8px; margin-bottom: 8px; }
+        .movie-title { color: #fff; font-size: 14px; font-weight: 600; margin: 0 0 4px; }
+        .movie-year { color: #aaa; font-size: 12px; margin: 0; }
+        @media(max-width:768px){ #main-navbar{padding:10px 16px; flex-wrap:wrap;} .nav-search{width:100%; order:3; margin-top:10px;} .page-header{padding:30px 16px 15px;} .genre-section{padding:0 16px;} }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg" id="main-navbar">
+        <a class="navbar-brand" href="home.html">WatchLy</a>
+        <div class="nav-search">
+            <input type="text" class="nav-search-input" id="nav-search-input" placeholder="Search movies, TV shows...">
+            <button class="nav-search-btn" onclick="goToSearch()">Search</button>
+        </div>
+        <div class="d-flex align-items-center ml-auto" id="nav-links">
+            <a href="home.html" class="nav-link">Home</a>
+            <a href="search.html" class="nav-link">Search</a>
+            <a href="movies.html" class="nav-link active-link">Movies</a>
+            <a href="tvshows.html" class="nav-link">TV Shows</a>
+            <a href="profile.html" class="nav-avatar" id="userAvatar">A</a>
+        </div>
+    </nav>
+
+    <div class="page-header"><h2>Browse Movies</h2><p>Explore our collection organized by genre</p></div>
+
+    <div class="container-fluid px-4">
+        <section class="genre-section">
+            <h3 class="genre-title"><i class="fas fa-bolt"></i> Action</h3>
+            <div class="row" id="actionMovies"></div>
+        </section>
+        <section class="genre-section">
+            <h3 class="genre-title"><i class="fas fa-theater-masks"></i> Drama</h3>
+            <div class="row" id="dramaMovies"></div>
+        </section>
+        <section class="genre-section">
+            <h3 class="genre-title"><i class="fas fa-rocket"></i> Sci-Fi</h3>
+            <div class="row" id="scifiMovies"></div>
+        </section>
+        <section class="genre-section">
+            <h3 class="genre-title"><i class="fas fa-heart"></i> Romance</h3>
+            <div class="row" id="romanceMovies"></div>
+        </section>
+    </div>
+
+    <script>
+        const movies = {
+            actionMovies: [
+                { id: 155, title: "The Dark Knight", year: 2008, poster: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" },
+                { id: 76341, title: "Mad Max: Fury Road", year: 2015, poster: "https://image.tmdb.org/t/p/w500/hA2ple9q4qnwxp3hKVNhroipsir.jpg" },
+                { id: 245891, title: "John Wick", year: 2014, poster: "https://image.tmdb.org/t/p/w500/fZPSd91yGE9fCcCe6OoQr6E3Bev.jpg" },
+                { id: 575264, title: "Mission: Impossible", year: 2023, poster: "https://image.tmdb.org/t/p/w500/NNxYkU70HPurnNCSiCjYAmacwm.jpg" }
+            ],
+            dramaMovies: [
+                { id: 278, title: "The Shawshank Redemption", year: 1994, poster: "https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg" },
+                { id: 238, title: "The Godfather", year: 1972, poster: "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg" },
+                { id: 13, title: "Forrest Gump", year: 1994, poster: "https://image.tmdb.org/t/p/w500/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg" },
+                { id: 424, title: "Schindler's List", year: 1993, poster: "https://image.tmdb.org/t/p/w500/sF1U4EUQS8YHUYjNl3pTXMYXKd.jpg" }
+            ],
+            scifiMovies: [
+                { id: 27205, title: "Inception", year: 2010, poster: "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg" },
+                { id: 157336, title: "Interstellar", year: 2014, poster: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" },
+                { id: 603, title: "The Matrix", year: 1999, poster: "https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg" },
+                { id: 438631, title: "Dune", year: 2021, poster: "https://image.tmdb.org/t/p/w500/d5NXSklpcvkC173QCnEh3w0VBgX.jpg" }
+            ],
+            romanceMovies: [
+                { id: 11036, title: "The Notebook", year: 2004, poster: "https://image.tmdb.org/t/p/w500/qom1SZSENdmHFNZBXbtJAU0WTlC.jpg" },
+                { id: 597, title: "Titanic", year: 1997, poster: "https://image.tmdb.org/t/p/w500/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg" },
+                { id: 313369, title: "La La Land", year: 2016, poster: "https://image.tmdb.org/t/p/w500/uDO8zWDhfWwo7KS6jgbpcrW3aO.jpg" },
+                { id: 1400, title: "Pride & Prejudice", year: 2005, poster: "https://image.tmdb.org/t/p/w500/sGjIvtVvTlWnia2zfJfHz81pZ9Q.jpg" }
+            ]
+        };
+
+        function renderGenre(containerId, items) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = items.map(m => `
+                <div class="col-lg-3 col-md-4 col-6 mb-4">
+                    <a href="content-detail.html?id=${m.id}&type=movie" style="text-decoration:none;color:inherit;">
+                        <div class="movie-card">
+                            <img src="${m.poster}" class="movie-poster-img" alt="${m.title}" onerror="this.src='https://via.placeholder.com/200x300/1a2d47/F63049?text=${encodeURIComponent(m.title)}'">
+                            <p class="movie-title">${m.title}</p>
+                            <p class="movie-year">${m.year}</p>
+                        </div>
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        function goToSearch() {
+            const q = document.getElementById('nav-search-input').value.trim();
+            if(q) window.location.href = `search.html?q=${encodeURIComponent(q)}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            Object.keys(movies).forEach(k => renderGenre(k, movies[k]));
+            const s = localStorage.getItem('watchly_session');
+            if(s) document.getElementById('userAvatar').textContent = JSON.parse(s).user.name.charAt(0);
+        });
+    </script>
+</body>
+</html>

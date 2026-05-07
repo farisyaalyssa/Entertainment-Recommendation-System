@@ -4,231 +4,266 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WatchLy - Home</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/home.css">
+    <style>
+        #main-navbar, .navbar { background-color: #0a1628; padding: 10px 32px; border-bottom: 1px solid #1e3050; display: flex; align-items: center; gap: 24px; position: sticky; top: 0; z-index: 1000; }
+        #main-navbar .navbar-brand { color: #F63049; font-weight: 700; font-size: 22px; white-space: nowrap; flex-shrink: 0; margin: 0; text-decoration: none; }
+        .nav-search { flex: 1; max-width: 520px; margin: 0 auto; display: flex; align-items: center; gap: 8px; }
+        .nav-search-input { flex: 1; background-color: #1a2d47; border: 1px solid #1e3050; border-radius: 8px; padding: 8px 14px; color: #ffffff; font-size: 13px; outline: none; }
+        .nav-search-input::placeholder { color: #555; }
+        .nav-search-input:focus { border-color: #F63049; }
+        .nav-search-btn { background-color: #F63049; color: #ffffff; border: none; border-radius: 8px; padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+        .nav-search-btn:hover { background-color: #d42a3f; }
+        #nav-links { flex-shrink: 0; display: flex; align-items: center; gap: 4px; }
+        #main-navbar .nav-link { color: #aaaaaa; font-size: 14px; padding: 6px 12px; text-decoration: none; white-space: nowrap; }
+        #main-navbar .nav-link:hover { color: #ffffff; }
+        #main-navbar .active-link { color: #ffffff; font-weight: 600; }
+        .nav-avatar { width: 34px; height: 34px; border-radius: 50%; background-color: #F63049; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-left: 8px; text-decoration: none; flex-shrink: 0; cursor: pointer; }
+        .hero-carousel { position: relative; height: 650px; overflow: hidden; margin-bottom: 40px; }
+        .hero-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; visibility: hidden; transition: opacity 1s; z-index: 1; }
+        .hero-slide.active { opacity: 1; visibility: visible; z-index: 2; }
+        .hero-bg { width: 100%; height: 100%; object-fit: cover; }
+        .hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to right, rgba(11,17,27,0.95) 0%, rgba(11,17,27,0.6) 50%, rgba(11,17,27,0.3) 100%); z-index: 1; }
+        .hero-content { position: absolute; top: 50%; left: 60px; transform: translateY(-50%); max-width: 700px; z-index: 2; color: #fff; }
+        .hero-badge { display: inline-block; background: #F63049; padding: 6px 16px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-bottom: 16px; }
+        .hero-title { font-size: 64px; font-weight: 700; margin: 0 0 16px; line-height: 1.1; }
+        .hero-meta { display: flex; gap: 20px; margin-bottom: 16px; font-size: 15px; color: #ccc; }
+        .hero-meta .rating { color: #F63049; font-weight: 600; }
+        .hero-description { font-size: 17px; line-height: 1.7; margin-bottom: 28px; color: #e0e0e0; }
+        .hero-buttons { display: flex; gap: 12px; }
+        .hero-control { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(246,48,73,0.85); color: #fff; border: none; width: 55px; height: 55px; border-radius: 50%; cursor: pointer; z-index: 10; font-size: 20px; }
+        .hero-prev { left: 20px; } .hero-next { right: 20px; }
+        .hero-indicators { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 10; }
+        .indicator { width: 12px; height: 12px; border-radius: 50%; background: rgba(255,255,255,0.4); border: none; cursor: pointer; }
+        .indicator.active { background: #F63049; width: 36px; border-radius: 6px; }
+        .content-main { padding: 0 60px 60px; max-width: 1920px; margin: 0 auto; }
+        .row-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .row-title { color: #fff; font-size: 24px; font-weight: 600; margin: 0; }
+        .row-link { color: #F63049; text-decoration: none; font-weight: 600; }
+        .row-content { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 20px; }
+        .content-card { position: relative; min-width: 200px; height: 300px; border-radius: 8px; overflow: hidden; cursor: pointer; flex-shrink: 0; }
+        .content-card:hover { transform: scale(1.05); }
+        .content-card img { width: 100%; height: 100%; object-fit: cover; }
+        .card-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.95), transparent); padding: 60px 12px 12px; opacity: 0; transition: opacity 0.3s; }
+        .content-card:hover .card-overlay { opacity: 1; }
+        .card-overlay h4 { color: #fff; margin: 0 0 6px; font-size: 15px; }
+        .card-overlay p { color: #F63049; margin: 0 0 4px; font-size: 13px; font-weight: 600; }
+        .btn-add { position: absolute; top: 10px; right: 10px; background: #F63049; color: #fff; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; opacity: 0; transition: opacity 0.3s; }
+        .content-card:hover .btn-add { opacity: 1; }
+        .progress-bar { position: absolute; bottom: 0; left: 0; height: 4px; background: #F63049; }
+        @media(max-width:768px){ #main-navbar{padding:10px 16px; flex-wrap:wrap;} .nav-search{width:100%; order:3; margin-top:10px;} .hero-carousel{height:450px;} .hero-content{left:20px; max-width:90%;} .hero-title{font-size:36px;} .content-main{padding:0 16px 40px;} }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar" id="mainNavbar">
-        <div class="nav-container">
-            <div class="nav-left">
-                <a href="home.html" class="logo">WatchLy</a>
-                <ul class="nav-links" id="navLinks">
-                    <li><a href="home.html" class="nav-link active" data-section="home">Home</a></li>
-                    <li><a href="#" class="nav-link" data-section="movies">Movies</a></li>
-                    <li><a href="#" class="nav-link" data-section="tvshows">TV Shows</a></li>
-                    <li><a href="#" class="nav-link" data-section="mylist">My List</a></li>
-                </ul>
-            </div>
-            
-            <div class="nav-right">
-                <div class="search-box" id="searchBox">
-                    <button class="search-toggle" id="searchToggle" aria-label="Search">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    <input type="text" class="search-input" id="searchInput" 
-                           placeholder="Titles, people, genres" aria-label="Search">
-                    <button class="search-close" id="searchClose" aria-label="Close search">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                
-                <div class="user-menu">
-                    <button class="avatar-btn" id="avatarBtn" aria-label="User menu">
-                        <span class="avatar" id="userAvatar">A</span>
-                    </button>
-                    <div class="user-dropdown" id="userDropdown" role="menu">
-                        <a href="profile.html" role="menuitem"><i class="fas fa-user"></i> Profile</a>
-                        <a href="profile.html?tab=settings" role="menuitem"><i class="fas fa-cog"></i> Settings</a>
-                        <a href="#" onclick="logout()" role="menuitem"><i class="fas fa-sign-out-alt"></i> Sign out</a>
-                    </div>
-                </div>
-            </div>
+    <nav class="navbar navbar-expand-lg" id="main-navbar">
+        <a class="navbar-brand" href="home.html">WatchLy</a>
+        <div class="nav-search">
+            <input type="text" class="nav-search-input" id="nav-search-input" placeholder="Search movies, TV shows...">
+            <button class="nav-search-btn" onclick="goToSearch()">Search</button>
+        </div>
+        <div class="d-flex align-items-center ml-auto" id="nav-links">
+            <a href="home.html" class="nav-link active-link">Home</a>
+            <a href="search.html" class="nav-link">Search</a>
+            <a href="movies.html" class="nav-link">Movies</a>
+            <a href="tvshows.html" class="nav-link">TV Shows</a>
+            <a href="profile.html" class="nav-avatar" id="userAvatar">A</a>
         </div>
     </nav>
 
-    <!-- Hero Carousel -->
-    <section class="hero-carousel" id="heroCarousel" aria-label="Featured content">
-        <div class="hero-slides" id="heroSlides">
-            <!-- Slide 1 -->
-            <div class="hero-slide active" data-index="0">
-                <img src="https://image.tmdb.org/t/p/original/56v2KjBlU4XaOv9rVYkJu64MxXf.jpg" 
-                     alt="Featured Movie 1" class="hero-bg" loading="lazy">
-                <div class="hero-overlay"></div>
-                <div class="hero-content">
-                    <span class="hero-badge">Featured</span>
-                    <h1 class="hero-title">The Last Adventure</h1>
-                    <p class="hero-meta">
-                        <span class="rating"><i class="fas fa-star"></i> 8.5</span>
-                        <span class="year">2024</span>
-                        <span class="duration">2h 15m</span>
-                        <span class="genre">Action • Adventure</span>
-                    </p>
-                    <p class="hero-description">
-                        An epic journey through unexplored territories where courage meets destiny. 
-                        Experience breathtaking visuals and an unforgettable story of heroism.
-                    </p>
-                    <div class="hero-buttons">
-                        <button class="btn btn-primary btn-large" onclick="playContent(1)">
-                            <i class="fas fa-play"></i> Watch Now
-                        </button>
-                        <button class="btn btn-secondary btn-large" onclick="addToWatchlist(1)">
-                            <i class="fas fa-plus"></i> My List
-                        </button>
-                    </div>
+    <section class="hero-carousel">
+        <div class="hero-slide active">
+            <img src="https://image.tmdb.org/t/p/original/qJ2tW6WMUDux911r6m7haRef0WH.jpg" alt="The Dark Knight" class="hero-bg">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="hero-badge">Featured</span>
+                <h1 class="hero-title">The Dark Knight</h1>
+                <div class="hero-meta">
+                    <span class="rating"><i class="fas fa-star"></i> 9.0</span>
+                    <span>2008</span>
+                    <span>2h 32m</span>
+                    <span>Action • Crime • Drama</span>
                 </div>
-            </div>
-            
-            <!-- Slide 2 -->
-            <div class="hero-slide" data-index="1">
-                <img src="https://image.tmdb.org/t/p/original/9Gtg2DzBhmYamXBS1hKAhiwbBKS.jpg" 
-                     alt="Featured Movie 2" class="hero-bg" loading="lazy">
-                <div class="hero-overlay"></div>
-                <div class="hero-content">
-                    <span class="hero-badge">New Release</span>
-                    <h1 class="hero-title">Midnight Chronicles</h1>
-                    <p class="hero-meta">
-                        <span class="rating"><i class="fas fa-star"></i> 9.1</span>
-                        <span class="year">2024</span>
-                        <span class="duration">1h 58m</span>
-                        <span class="genre">Thriller • Mystery</span>
-                    </p>
-                    <p class="hero-description">
-                        When darkness falls, secrets emerge. A gripping tale of suspense that will 
-                        keep you on the edge of your seat until the very last frame.
-                    </p>
-                    <div class="hero-buttons">
-                        <button class="btn btn-primary btn-large" onclick="playContent(2)">
-                            <i class="fas fa-play"></i> Watch Now
-                        </button>
-                        <button class="btn btn-secondary btn-large" onclick="addToWatchlist(2)">
-                            <i class="fas fa-plus"></i> My List
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Slide 3 -->
-            <div class="hero-slide" data-index="2">
-                <img src="https://image.tmdb.org/t/p/original/8rpDcsfLJypbO6vREc0547VKqEv.jpg" 
-                     alt="Featured Movie 3" class="hero-bg" loading="lazy">
-                <div class="hero-overlay"></div>
-                <div class="hero-content">
-                    <span class="hero-badge">Trending</span>
-                    <h1 class="hero-title">Beyond the Stars</h1>
-                    <p class="hero-meta">
-                        <span class="rating"><i class="fas fa-star"></i> 8.8</span>
-                        <span class="year">2024</span>
-                        <span class="duration">2h 32m</span>
-                        <span class="genre">Sci-Fi • Drama</span>
-                    </p>
-                    <p class="hero-description">
-                        Humanity's greatest journey begins. Explore the unknown reaches of space 
-                        in this visually stunning epic about hope, sacrifice, and discovery.
-                    </p>
-                    <div class="hero-buttons">
-                        <button class="btn btn-primary btn-large" onclick="playContent(3)">
-                            <i class="fas fa-play"></i> Watch Now
-                        </button>
-                        <button class="btn btn-secondary btn-large" onclick="addToWatchlist(3)">
-                            <i class="fas fa-plus"></i> My List
-                        </button>
-                    </div>
+                <p class="hero-description">When the menace known as the Joker wreaks havoc on Gotham, Batman must accept one of the greatest psychological tests of his ability to fight injustice.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="window.location.href='content-detail.html?id=155&type=movie'"><i class="fas fa-play"></i> Watch Now</button>
+                    <button class="btn btn-secondary" onclick="addToWatchlist(155)"><i class="fas fa-plus"></i> My List</button>
                 </div>
             </div>
         </div>
-        
-        <!-- Carousel Controls -->
-        <button class="hero-control hero-prev" id="heroPrev" aria-label="Previous slide">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="hero-control hero-next" id="heroNext" aria-label="Next slide">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-        
-        <!-- Carousel Indicators -->
-        <div class="hero-indicators" id="heroIndicators">
-            <button class="indicator active" data-slide="0" aria-label="Go to slide 1"></button>
-            <button class="indicator" data-slide="1" aria-label="Go to slide 2"></button>
-            <button class="indicator" data-slide="2" aria-label="Go to slide 3"></button>
+        <div class="hero-slide">
+            <img src="https://image.tmdb.org/t/p/original/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg" alt="Inception" class="hero-bg">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="hero-badge">New Release</span>
+                <h1 class="hero-title">Inception</h1>
+                <div class="hero-meta">
+                    <span class="rating"><i class="fas fa-star"></i> 8.8</span>
+                    <span>2010</span>
+                    <span>2h 28m</span>
+                    <span>Sci-Fi • Thriller</span>
+                </div>
+                <p class="hero-description">A thief who steals corporate secrets through dream-sharing technology is given the inverse task of planting an idea into a CEO's mind.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="window.location.href='content-detail.html?id=27205&type=movie'"><i class="fas fa-play"></i> Watch Now</button>
+                    <button class="btn btn-secondary" onclick="addToWatchlist(27205)"><i class="fas fa-plus"></i> My List</button>
+                </div>
+            </div>
+        </div>
+        <div class="hero-slide">
+            <img src="https://image.tmdb.org/t/p/original/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" alt="Interstellar" class="hero-bg">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <span class="hero-badge">Trending</span>
+                <h1 class="hero-title">Interstellar</h1>
+                <div class="hero-meta">
+                    <span class="rating"><i class="fas fa-star"></i> 8.7</span>
+                    <span>2014</span>
+                    <span>2h 49m</span>
+                    <span>Sci-Fi • Drama • Adventure</span>
+                </div>
+                <p class="hero-description">A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="window.location.href='content-detail.html?id=157336&type=movie'"><i class="fas fa-play"></i> Watch Now</button>
+                    <button class="btn btn-secondary" onclick="addToWatchlist(157336)"><i class="fas fa-plus"></i> My List</button>
+                </div>
+            </div>
+        </div>
+        <button class="hero-control hero-prev"><i class="fas fa-chevron-left"></i></button>
+        <button class="hero-control hero-next"><i class="fas fa-chevron-right"></i></button>
+        <div class="hero-indicators">
+            <button class="indicator active"></button>
+            <button class="indicator"></button>
+            <button class="indicator"></button>
         </div>
     </section>
 
-    <!-- Main Content -->
-    <main class="content-main" id="contentMain">
-        <!-- Continue Watching -->
-        <section class="content-row" data-category="continue">
-            <div class="row-header">
-                <h2 class="row-title">Continue Watching</h2>
-                <a href="#" class="row-link">View All</a>
-            </div>
-            <div class="row-content" id="continueRow">
-                <!-- Cards will be injected by JavaScript -->
-            </div>
+    <main class="content-main">
+        <section class="content-row">
+            <div class="row-header"><h2 class="row-title">Continue Watching</h2><a href="#" class="row-link">View All</a></div>
+            <div class="row-content" id="continueRow"></div>
         </section>
-
-        <!-- Recommended For You -->
-        <section class="content-row" data-category="recommended">
-            <div class="row-header">
-                <h2 class="row-title">Recommended For You</h2>
-                <a href="#" class="row-link">View All</a>
-            </div>
-            <div class="row-content" id="recommendedRow">
-                <!-- Cards will be injected by JavaScript -->
-            </div>
+        <section class="content-row">
+            <div class="row-header"><h2 class="row-title">Recommended For You</h2><a href="#" class="row-link">View All</a></div>
+            <div class="row-content" id="recommendedRow"></div>
         </section>
-
-        <!-- Trending Now -->
-        <section class="content-row" data-category="trending">
-            <div class="row-header">
-                <h2 class="row-title">Trending Now</h2>
-                <a href="#" class="row-link">View All</a>
-            </div>
-            <div class="row-content" id="trendingRow">
-                <!-- Cards will be injected by JavaScript -->
-            </div>
+        <section class="content-row">
+            <div class="row-header"><h2 class="row-title">Trending Now</h2><a href="#" class="row-link">View All</a></div>
+            <div class="row-content" id="trendingRow"></div>
         </section>
-
-        <!-- Top Rated Movies -->
-        <section class="content-row" data-category="top-movies">
-            <div class="row-header">
-                <h2 class="row-title">Top Rated Movies</h2>
-                <a href="#" class="row-link">View All</a>
-            </div>
-            <div class="row-content" id="topMoviesRow">
-                <!-- Cards will be injected by JavaScript -->
-            </div>
+        <section class="content-row">
+            <div class="row-header"><h2 class="row-title">Top Rated Movies</h2><a href="#" class="row-link">View All</a></div>
+            <div class="row-content" id="topMoviesRow"></div>
         </section>
-
-        <!-- Because You Watched -->
-        <section class="content-row" data-category="because">
-            <div class="row-header">
-                <h2 class="row-title">Because You Watched <span class="highlight">Action Movie</span></h2>
-                <a href="#" class="row-link">View All</a>
-            </div>
-            <div class="row-content" id="becauseRow">
-                <!-- Cards will be injected by JavaScript -->
-            </div>
+        <section class="content-row">
+            <div class="row-header"><h2 class="row-title">Because You Watched <span style="color:#F63049">Action</span></h2><a href="#" class="row-link">View All</a></div>
+            <div class="row-content" id="becauseRow"></div>
         </section>
     </main>
 
-    <!-- Footer -->
     <footer class="footer main-footer">
-        <div class="container">
-            <p>&copy; 2024 WatchLy. All rights reserved.</p>
-            <div class="footer-links">
-                <a href="#">Privacy</a>
-                <a href="#">Terms</a>
-                <a href="#">Help</a>
-                <a href="#">Contact</a>
-            </div>
-        </div>
+        <div class="container"><p>&copy; 2026 WatchLy. All rights reserved.</p></div>
     </footer>
 
-    <!-- Scripts -->
-    <script src="js/navigation.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/home.js"></script>
+    <script>
+        const homeData = {
+            continue: [
+                { id: 155, title: "The Dark Knight", year: 2008, progress: 65, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" },
+                { id: 27205, title: "Inception", year: 2010, progress: 30, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg" },
+                { id: 157336, title: "Interstellar", year: 2014, progress: 85, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" },
+                { id: 438631, title: "Dune", year: 2021, progress: 12, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/d5NXSklpcvkC173QCnEh3w0VBgX.jpg" }
+            ],
+            recommended: [
+                { id: 550, title: "Fight Club", year: 1999, rating: 8.8, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg" },
+                { id: 13, title: "Forrest Gump", year: 1994, rating: 8.8, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg" },
+                { id: 680, title: "Pulp Fiction", year: 1994, rating: 8.9, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg" },
+                { id: 424, title: "Schindler's List", year: 1993, rating: 9.0, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/sF1U4EUQS8YHUYjNl3pTXMYXKd.jpg" },
+                { id: 389, title: "12 Angry Men", year: 1957, rating: 9.0, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/ow3wq89wM8qd5X7hWKxiRfsFf9C.jpg" },
+                { id: 19404, title: "Dilwale Dulhania Le Jayenge", year: 1995, rating: 8.7, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/2CAL2433ZeIihfX1Hb2139CX0pW.jpg" }
+            ],
+            trending: [
+                { id: 94997, title: "House of the Dragon", year: 2022, rating: 8.5, contentType: "tv", poster: "https://image.tmdb.org/t/p/w500/7QMsOTMUswlwxJP0rTTZfmz2tX2.jpg" },
+                { id: 85271, title: "WandaVision", year: 2021, rating: 8.4, contentType: "tv", poster: "https://image.tmdb.org/t/p/w500/glKDfE6btIRcVB5zrjspRIs4r52.jpg" },
+                { id: 60735, title: "The Flash", year: 2023, rating: 7.0, contentType: "tv", poster: "https://image.tmdb.org/t/p/w500/rktDFPbfHfUbArZ6OOOKsXcv0Bm.jpg" },
+                { id: 76479, title: "The Boys", year: 2019, rating: 8.7, contentType: "tv", poster: "https://image.tmdb.org/t/p/w500/stTEycfG9928HYGEISBFaG1ngjM.jpg" },
+                { id: 1396, title: "Breaking Bad", year: 2008, rating: 9.5, contentType: "tv", poster: "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg" },
+                { id: 1668, title: "Friends", year: 1994, rating: 8.9, contentType: "tv", poster: "https://image.tmdb.org/t/p/w500/f496cm9enuEsZkSPzCwnGSEKJwv.jpg" }
+            ],
+            topMovies: [
+                { id: 238, title: "The Godfather", year: 1972, rating: 9.2, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg" },
+                { id: 278, title: "The Shawshank Redemption", year: 1994, rating: 9.3, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg" },
+                { id: 424, title: "Schindler's List", year: 1993, rating: 9.0, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/sF1U4EUQS8YHUYjNl3pTXMYXKd.jpg" },
+                { id: 389, title: "12 Angry Men", year: 1957, rating: 9.0, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/ow3wq89wM8qd5X7hWKxiRfsFf9C.jpg" },
+                { id: 129, title: "Spirited Away", year: 2001, rating: 8.6, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg" },
+                { id: 155, title: "The Dark Knight", year: 2008, rating: 9.0, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" }
+            ],
+            because: [
+                { id: 245891, title: "John Wick", year: 2014, rating: 7.4, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/fZPSd91yGE9fCcCe6OoQr6E3Bev.jpg" },
+                { id: 324857, title: "Spider-Man: Into the Spider-Verse", year: 2018, rating: 8.4, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/iiZZdoQBEYBv6id8su7ImL0oCbD.jpg" },
+                { id: 299536, title: "Avengers: Infinity War", year: 2018, rating: 8.3, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg" },
+                { id: 299534, title: "Avengers: Endgame", year: 2019, rating: 8.4, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg" },
+                { id: 1726, title: "Iron Man", year: 2008, rating: 7.9, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/78lPtwv72eTNqFW9COBYI0dWDJa.jpg" },
+                { id: 1771, title: "Captain America", year: 2011, rating: 7.0, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/vSNxAJTlD0r02V9sPYpOjqDZXUK.jpg" }
+            ]
+        };
+
+        function renderRow(id, items, hasProgress=false) {
+            const container = document.getElementById(id);
+            if (!container) return;
+            
+            container.innerHTML = items.map(i => {
+                // Link to content detail page with ID and type
+                const detailUrl = `content-detail.html?id=${i.id}&type=${i.contentType}`;
+                return `
+                    <a href="${detailUrl}" style="text-decoration:none;color:inherit;display:block;">
+                        <div class="content-card">
+                            <img src="${i.poster}" alt="${i.title}" onerror="this.src='https://via.placeholder.com/200x300/1a2d47/F63049?text=${encodeURIComponent(i.title)}'">
+                            ${hasProgress && i.progress ? `<div class="progress-bar" style="width:${i.progress}%"></div>` : ''}
+                            <div class="card-overlay">
+                                <h4>${i.title}</h4>
+                                ${i.rating ? `<p><i class="fas fa-star"></i> ${i.rating}</p>` : ''}
+                                <button class="btn-add" onclick="event.stopPropagation(); addToWatchlist(${i.id}); return false;"><i class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+        }
+
+        function addToWatchlist(id) { alert(`Added ID ${id} to watchlist`); }
+        function goToSearch() {
+            const q = document.getElementById('nav-search-input').value.trim();
+            if(q) window.location.href = `search.html?q=${encodeURIComponent(q)}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderRow('continueRow', homeData.continue, true);
+            renderRow('recommendedRow', homeData.recommended);
+            renderRow('trendingRow', homeData.trending);
+            renderRow('topMoviesRow', homeData.topMovies);
+            renderRow('becauseRow', homeData.because);
+
+            // Carousel
+            const slides = document.querySelectorAll('.hero-slide');
+            const indicators = document.querySelectorAll('.indicator');
+            let current = 0;
+            function go(idx) {
+                slides.forEach(s => s.classList.remove('active'));
+                indicators.forEach(i => i.classList.remove('active'));
+                slides[idx].classList.add('active');
+                indicators[idx].classList.add('active');
+                current = idx;
+            }
+            document.querySelector('.hero-prev').onclick = () => go((current - 1 + slides.length) % slides.length);
+            document.querySelector('.hero-next').onclick = () => go((current + 1) % slides.length);
+            indicators.forEach((ind, i) => ind.onclick = () => go(i));
+            setInterval(() => go((current + 1) % slides.length), 8000);
+
+            // Avatar
+            const s = localStorage.getItem('watchly_session');
+            if(s) document.getElementById('userAvatar').textContent = JSON.parse(s).user.name.charAt(0).toUpperCase();
+        });
+    </script>
 </body>
 </html>

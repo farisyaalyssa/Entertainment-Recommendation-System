@@ -9,92 +9,53 @@
 </head>
 <body class="auth-page">
     <div class="auth-container">
-        <!-- Logo -->
         <a href="index.html" class="auth-logo">WatchLy</a>
-        
-        <!-- Login Form -->
         <div class="auth-box">
             <h1>Sign In</h1>
-            
             <div id="loginError" class="alert alert-error"></div>
-            
             <form id="loginForm" class="auth-form">
                 <div class="form-group">
                     <label for="email">Email or Phone Number</label>
                     <div class="input-wrapper">
                         <i class="fas fa-envelope input-icon"></i>
-                        <input type="text" id="email" class="form-control" 
-                               placeholder="Enter your email" required>
+                        <input type="text" id="email" class="form-control" placeholder="Enter your email" required>
                     </div>
                 </div>
-                
                 <div class="form-group">
                     <label for="password">Password</label>
                     <div class="input-wrapper">
                         <i class="fas fa-lock input-icon"></i>
-                        <input type="password" id="password" class="form-control" 
-                               placeholder="Enter your password" required>
-                        <button type="button" class="toggle-password" onclick="togglePassword()">
-                            <i class="fas fa-eye"></i>
-                        </button>
+                        <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+                        <button type="button" class="toggle-password" onclick="togglePassword()"><i class="fas fa-eye"></i></button>
                     </div>
                 </div>
-                
                 <div class="form-options">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="rememberMe">
-                        <span>Remember me</span>
-                    </label>
+                    <label class="checkbox-label"><input type="checkbox" id="rememberMe"><span>Remember me</span></label>
                     <a href="#" class="forgot-link" onclick="showForgotPassword()">Forgot password?</a>
                 </div>
-                
                 <button type="submit" class="btn btn-primary btn-block">Sign In</button>
             </form>
-            
-            <div class="divider">
-                <span>or</span>
-            </div>
-            
+            <div class="divider"><span>or</span></div>
             <div class="social-login">
-                <button class="btn btn-social btn-google" onclick="socialLogin('google')">
-                    <i class="fab fa-google"></i> Sign in with Google
-                </button>
-                <button class="btn btn-social btn-facebook" onclick="socialLogin('facebook')">
-                    <i class="fab fa-facebook-f"></i> Sign in with Facebook
-                </button>
+                <button class="btn btn-social btn-google" onclick="socialLogin('google')"><i class="fab fa-google"></i> Sign in with Google</button>
+                <button class="btn btn-social btn-facebook" onclick="socialLogin('facebook')"><i class="fab fa-facebook-f"></i> Sign in with Facebook</button>
             </div>
-            
-            <p class="auth-footer">
-                New to WatchLy? <a href="register.html">Sign up now</a>
-            </p>
+            <p class="auth-footer">New to WatchLy? <a href="register.html">Sign up now</a></p>
         </div>
     </div>
-    
     <script src="js/auth.js"></script>
     <script>
         function togglePassword() {
-            const passwordInput = document.getElementById('password');
+            const input = document.getElementById('password');
             const icon = document.querySelector('.toggle-password i');
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.classList.replace('fa-eye', 'fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                icon.classList.replace('fa-eye-slash', 'fa-eye');
-            }
+            if (input.type === 'password') { input.type = 'text'; icon.className = 'fas fa-eye-slash'; }
+            else { input.type = 'password'; icon.className = 'fas fa-eye'; }
         }
-        
         function showForgotPassword() {
             const email = prompt('Please enter your email address:');
-            if (email) {
-                alert(`Password reset link sent to ${email}`);
-            }
+            if (email) alert(`Password reset link sent to ${email}`);
         }
-        
-        function socialLogin(provider) {
-            alert(`Signing in with ${provider}...`);
-        }
+        function socialLogin(provider) { alert(`Signing in with ${provider}...`); }
     </script>
 </body>
 </html>
