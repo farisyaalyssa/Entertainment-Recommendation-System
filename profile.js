@@ -90,6 +90,7 @@ function saveProfile() {
     if (newName) {
         document.querySelector('.profile-name').textContent = newName;
         document.querySelector('.nav-avatar').textContent = newName.charAt(0).toUpperCase();
+        document.querySelector('.avatar-circle').textContent = newName.charAt(0).toUpperCase();
     }
     if (newUsername) {
         document.querySelector('.profile-username').textContent = '@' + newUsername;
