@@ -123,7 +123,7 @@ class AuthManager {
     // Logout
     logout() {
         localStorage.removeItem('watchly_session');
-        window.location.href = 'index.html';
+        window.location.href = '../index.html';
     }
 }
 

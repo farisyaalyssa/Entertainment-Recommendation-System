@@ -73,7 +73,7 @@ function requireAuth() {
     if (!session && !window.location.pathname.includes('login.html') && 
         !window.location.pathname.includes('register.html') &&
         !window.location.pathname.includes('index.html')) {
-        window.location.href = 'login.html';
+        window.location.href = 'pages/login.html';
     }
 }
 

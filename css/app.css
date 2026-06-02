@@ -58,6 +58,9 @@ p {
     display: flex;
     align-items: center;
     gap: 24px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 #main-navbar .navbar-brand,

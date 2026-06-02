@@ -48,14 +48,14 @@ ul {
    NAVIGATION
    ============================================ */
 .navbar {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
     transition: var(--transition);
 }
 
 .landing-navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
     background: transparent;
     padding: 20px 4%;
 }
