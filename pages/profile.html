@@ -83,126 +83,26 @@
     </ul>
 
     <!-- WATCHLIST TAB -->
-     <div id="watchlist" class="tab-content">
-    <div class="row mt-3">
-        <div class="col-lg-3 col-md-4 col-6 mb-4">
-            <div class="movie-card" onclick="window.location.href='content-detail.html?id=27205&type=movie'">
-                <img src="https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg" class="movie-poster-img" alt="Inception">
-                <p class="movie-title">Inception</p>
-                <p class="movie-year">2010</p>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-6 mb-4">
-            <div class="movie-card" onclick="window.location.href='content-detail.html?id=157336&type=movie'">
-                <img src="https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" class="movie-poster-img" alt="Interstellar">
-                <p class="movie-title">Interstellar</p>
-                <p class="movie-year">2014</p>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-6 mb-4">
-            <div class="movie-card" onclick="window.location.href='content-detail.html?id=155&type=movie'">
-                <img src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" class="movie-poster-img" alt="The Dark Knight">
-                <p class="movie-title">The Dark Knight</p>
-                <p class="movie-year">2008</p>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-6 mb-4">
-            <div class="movie-card" onclick="window.location.href='content-detail.html?id=438631&type=movie'">
-                <img src="https://image.tmdb.org/t/p/w500/d5NXSklpcvkC173QCnEh3w0VBgX.jpg" class="movie-poster-img" alt="Dune">
-                <p class="movie-title">Dune</p>
-                <p class="movie-year">2021</p>
-            </div>
-        </div>
+    <div id="watchlist" class="tab-content">
+        <div class="row mt-3" id="watchlist-grid"></div>
     </div>
-</div>
 
     <!-- REVIEWS TAB -->
     <div id="reviews" class="tab-content" style="display: none;">
-        <div class="mt-3">
-            <div class="review-card mb-3">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                    <p class="review-title">Inception</p>
-                    <span class="review-rating">★★★★★</span>
-                </div>
-                <p class="review-text">An absolute masterpiece. The layers of the dream world are so well constructed.</p>
-            </div>
-            <div class="review-card mb-3">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                    <p class="review-title">Interstellar</p>
-                    <span class="review-rating">★★★★☆</span>
-                </div>
-                <p class="review-text">Visually stunning. The science is mind-bending and the emotional core really lands.</p>
-            </div>
-        </div>
+        <div class="mt-3" id="reviews-list"></div>
     </div>
 
     <!-- FAVOURITES TAB -->
     <div id="favourites" class="tab-content" style="display: none;">
-        <div class="row mt-3">
-            <div class="col-lg-3 col-md-4 col-6 mb-4">
-            <div class="movie-card" onclick="window.location.href='content-detail.html?id=27205&type=movie'">
-                <img src="https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg" class="movie-poster-img" alt="Inception">
-                <p class="movie-title">Inception</p>
-                <p class="movie-year">2010</p>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-6 mb-4">
-            <div class="movie-card" onclick="window.location.href='content-detail.html?id=157336&type=movie'">
-                <img src="https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" class="movie-poster-img" alt="Interstellar">
-                <p class="movie-title">Interstellar</p>
-                <p class="movie-year">2014</p>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-4 col-6 mb-4">
-            <div class="movie-card" onclick="window.location.href='content-detail.html?id=155&type=movie'">
-                <img src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" class="movie-poster-img" alt="The Dark Knight">
-                <p class="movie-title">The Dark Knight</p>
-                <p class="movie-year">2008</p>
-            </div>
-        </div>
-        </div>
+        <div class="row mt-3" id="favourites-grid"></div>
     </div>
 
     <!-- WATCH HISTORY TAB -->
     <div id="history" class="tab-content" style="display: none;">
-        <div class="mt-3">
-            <div class="history-card mb-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                        <div class="history-poster mr-3">M</div>
-                        <div>
-                            <p class="history-title">Inception</p>
-                            <p class="history-meta">Action · 2010</p>
-                        </div>
-                    </div>
-                    <p class="history-date">2 days ago</p>
-                </div>
-            </div>
-            <div class="history-card mb-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                        <div class="history-poster mr-3">D</div>
-                        <div>
-                            <p class="history-title">Dune</p>
-                            <p class="history-meta">Sci-Fi · 2021</p>
-                        </div>
-                    </div>
-                    <p class="history-date">5 days ago</p>
-                </div>
-            </div>
-            <div class="history-card mb-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                        <div class="history-poster mr-3">T</div>
-                        <div>
-                            <p class="history-title">The Dark Knight</p>
-                            <p class="history-meta">Action · 2008</p>
-                        </div>
-                    </div>
-                    <p class="history-date">1 week ago</p>
-                </div>
-            </div>
+        <div class="d-flex justify-content-end mt-3">
+            <button class="btn-cancel" onclick="clearHistory()">Clear History</button>
         </div>
+        <div class="mt-3" id="history-list"></div>
     </div>
 
 </div>
@@ -216,20 +116,20 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label class="form-label">Current Password</label>
-                    <input type="password" class="form-input" placeholder="Enter current password">
+                    <input type="password" class="form-input" id="current-password" placeholder="Enter current password">
                 </div>
                 <div class="form-group">
                     <label class="form-label">New Password</label>
-                    <input type="password" class="form-input" placeholder="Enter new password">
+                    <input type="password" class="form-input" id="new-password" placeholder="Enter new password">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Confirm New Password</label>
-                    <input type="password" class="form-input" placeholder="Confirm new password">
+                    <input type="password" class="form-input" id="confirm-password" placeholder="Confirm new password">
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn-cancel" onclick="closeChangePasswordModal()">Cancel</button>
-                <button class="btn-save">Save Changes</button>
+                <button class="btn-save" onclick="savePassword()">Save Changes</button>
             </div>
         </div>
     </div>

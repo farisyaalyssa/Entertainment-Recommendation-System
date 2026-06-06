@@ -107,35 +107,94 @@
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
     <script>
-        
+
         var API_KEY = '9702460f55f5b08f0ad2c93b27dcebf3';
         var BASE_URL = 'https://api.themoviedb.org/3';
         var IMG_URL = 'https://image.tmdb.org/t/p/';
+        var API_BASE = 'http://localhost:5000';
 
-        // get the movie/show id and type from the URL
-        // e.g. content-detail.html?id=27205&type=movie
         var params = new URLSearchParams(window.location.search);
         var contentId = params.get('id');
         var contentType = params.get('type') || 'movie';
 
+        var contentData = null;
         var currentRating = 0;
+        var userReviewId = null;
         var inWatchlist = false;
+        var inFavourites = false;
+        var isWatched = false;
 
-        // ── FETCH CONTENT DETAILS FROM TMDB ──────────
+        function getAuthToken() {
+            var token = localStorage.getItem('watchly_token');
+            if (token) return token;
+
+            try {
+                var session = JSON.parse(localStorage.getItem('watchly_session') || '{}');
+                return session.token || null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function getCurrentUserId() {
+            try {
+                var session = JSON.parse(localStorage.getItem('watchly_session') || '{}');
+                return session.user ? (session.user.id || session.user._id) : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function requireAuth() {
+            if (!getAuthToken()) {
+                alert('Please log in to use this feature.');
+                window.location.href = 'login.html';
+                return false;
+            }
+            return true;
+        }
+
+        function apiFetch(path, options) {
+            if (!requireAuth()) {
+                return Promise.reject(new Error('Not authenticated'));
+            }
+
+            options = options || {};
+            options.headers = Object.assign({
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + getAuthToken()
+            }, options.headers || {});
+
+            return fetch(API_BASE + path, options).then(function(res) {
+                return res.json().then(function(data) {
+                    if (!res.ok) {
+                        throw new Error(data.message || 'Request failed');
+                    }
+                    return data;
+                });
+            });
+        }
+
+        function escapeHtml(text) {
+            var div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
         window.onload = function() {
             if (!contentId) {
                 document.querySelector('.detail-content').innerHTML = '<p class="text-center mt-5">No content selected.</p>';
                 return;
             }
+
             fetch(BASE_URL + '/' + contentType + '/' + contentId + '?api_key=' + API_KEY)
                 .then(function(res) { return res.json(); })
                 .then(function(data) { renderContent(data); })
                 .catch(function() {
                     document.querySelector('.detail-content').innerHTML = '<p class="text-center mt-5">Failed to load content. Check your API key.</p>';
                 });
-        }
+        };
 
-        // ── RENDER THE CONTENT ─────────────────────
         function renderContent(data) {
             var title = data.title || data.name;
             var year = (data.release_date || data.first_air_date || '').substring(0, 4);
@@ -146,44 +205,41 @@
             var backdrop = data.backdrop_path ? IMG_URL + 'original' + data.backdrop_path : '';
             var genres = data.genres || [];
 
-            // page title
+            contentData = {
+                tmdbId: Number(contentId),
+                type: contentType,
+                title: title,
+                poster: poster
+            };
+
             document.title = 'WatchLy — ' + title;
 
-            // backdrop
             if (backdrop) {
-                var backdropEl = document.getElementById('backdrop-section');
-                backdropEl.style.backgroundImage = 'url(' + backdrop + ')';
+                document.getElementById('backdrop-section').style.backgroundImage = 'url(' + backdrop + ')';
             }
 
-            // poster
             document.getElementById('detail-poster').src = poster;
             document.getElementById('detail-poster').alt = title;
-
-            // title
             document.getElementById('detail-title').textContent = title;
-
-            // meta — year, rating, runtime
             document.getElementById('detail-meta').innerHTML =
                 '<span class="meta-tag">' + year + '</span>' +
                 '<span class="meta-tag">★ ' + rating + '</span>' +
                 (runtime ? '<span class="meta-tag">' + runtime + '</span>' : '');
 
-            // genres
-            var genreHTML = genres.map(function(g) {
+            document.getElementById('detail-genres').innerHTML = genres.map(function(g) {
                 return '<span class="genre-tag">' + g.name + '</span>';
             }).join('');
-            document.getElementById('detail-genres').innerHTML = genreHTML;
 
-            // overview
             document.getElementById('detail-overview').textContent = overview;
 
-            // load saved reviews
-            loadReviews();
+            if (getAuthToken()) {
+                loadUserStatus();
+            } else {
+                loadReviews();
+            }
         }
 
-        // ── WATCHLIST ──────────────────────────────
-        function toggleWatchlist() {
-            inWatchlist = !inWatchlist;
+        function updateWatchlistBtn() {
             var btn = document.getElementById('watchlist-btn');
             if (inWatchlist) {
                 btn.textContent = 'Added to Watchlist';
@@ -194,82 +250,250 @@
             }
         }
 
-        // ── FAVOURITE ──────────────────────────────────
-var inFavourites = false;
-
-function toggleFavourite() {
-    inFavourites = !inFavourites;
-    var btn = document.getElementById('favourite-btn');
-    if (inFavourites) {
-        btn.textContent = '♥ Added to Favourites';
-        btn.classList.add('btn-favourite-added');
-    } else {
-        btn.textContent = '♡ Add to Favourites';
-        btn.classList.remove('btn-favourite-added');
-    }
-}
-
-// ── MARK AS WATCHED ────────────────────────────
-var isWatched = false;
-
-function toggleWatched() {
-    isWatched = !isWatched;
-    var btn = document.getElementById('watched-btn');
-    if (isWatched) {
-        btn.textContent = 'Watched';
-        btn.classList.add('btn-watched-added');
-    } else {
-        btn.textContent = 'Mark as Watched';
-        btn.classList.remove('btn-watched-added');
-    }
-}
-
-        // ── STAR RATING ────────────────────────────
-        function setRating(val) {
-    currentRating = val;
-    var stars = document.querySelectorAll('.star');
-    stars.forEach(function(star, index) {
-        star.classList.toggle('star-filled', index < val);
-    });
-    var labels = ['', 'Terrible', 'Bad', 'Poor', 'Below Average', 'Average', 'Fine', 'Good', 'Great', 'Excellent', 'Masterpiece'];
-    document.getElementById('rating-feedback').textContent = val + '/10 — ' + labels[val];
-    localStorage.setItem('rating-' + contentId, val);
-}
-
-        // load saved rating if exists
-        function loadSavedRating() {
-            var saved = localStorage.getItem('rating-' + contentId);
-            if (saved) setRating(Number(saved));
+        function updateFavouriteBtn() {
+            var btn = document.getElementById('favourite-btn');
+            if (inFavourites) {
+                btn.textContent = '♥ Added to Favourites';
+                btn.classList.add('btn-favourite-added');
+            } else {
+                btn.textContent = '♡ Add to Favourites';
+                btn.classList.remove('btn-favourite-added');
+            }
         }
 
-        // ── REVIEWS ────────────────────────────────
+        function updateWatchedBtn() {
+            var btn = document.getElementById('watched-btn');
+            if (isWatched) {
+                btn.textContent = 'Watched';
+                btn.classList.add('btn-watched-added');
+            } else {
+                btn.textContent = 'Mark as Watched';
+                btn.classList.remove('btn-watched-added');
+            }
+        }
+
+        function loadUserStatus() {
+            Promise.all([
+                apiFetch('/api/watchlist'),
+                apiFetch('/api/favourites'),
+                apiFetch('/api/history')
+            ]).then(function(results) {
+                var tmdbId = Number(contentId);
+
+                inWatchlist = results[0].items.some(function(item) {
+                    return item.tmdbId === tmdbId && item.type === contentType;
+                });
+                inFavourites = results[1].items.some(function(item) {
+                    return item.tmdbId === tmdbId && item.type === contentType;
+                });
+                isWatched = results[2].items.some(function(item) {
+                    return item.tmdbId === tmdbId && item.type === contentType;
+                });
+
+                updateWatchlistBtn();
+                updateFavouriteBtn();
+                updateWatchedBtn();
+            }).catch(function(err) {
+                console.error('Failed to load user status:', err.message);
+            });
+
+            loadReviews();
+        }
+
+        function toggleWatchlist() {
+            if (!contentData) return;
+
+            if (inWatchlist) {
+                apiFetch('/api/watchlist/' + contentData.tmdbId + '?type=' + contentType, {
+                    method: 'DELETE'
+                }).then(function() {
+                    inWatchlist = false;
+                    updateWatchlistBtn();
+                }).catch(function(err) {
+                    alert(err.message);
+                });
+            } else {
+                apiFetch('/api/watchlist', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        tmdbId: contentData.tmdbId,
+                        type: contentData.type,
+                        title: contentData.title,
+                        poster: contentData.poster
+                    })
+                }).then(function() {
+                    inWatchlist = true;
+                    updateWatchlistBtn();
+                }).catch(function(err) {
+                    alert(err.message);
+                });
+            }
+        }
+
+        function toggleFavourite() {
+            if (!contentData) return;
+
+            if (inFavourites) {
+                apiFetch('/api/favourites/' + contentData.tmdbId + '?type=' + contentType, {
+                    method: 'DELETE'
+                }).then(function() {
+                    inFavourites = false;
+                    updateFavouriteBtn();
+                }).catch(function(err) {
+                    alert(err.message);
+                });
+            } else {
+                apiFetch('/api/favourites', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        tmdbId: contentData.tmdbId,
+                        type: contentData.type,
+                        title: contentData.title,
+                        poster: contentData.poster
+                    })
+                }).then(function() {
+                    inFavourites = true;
+                    updateFavouriteBtn();
+                }).catch(function(err) {
+                    alert(err.message);
+                });
+            }
+        }
+
+        function toggleWatched() {
+            if (!contentData) return;
+
+            if (isWatched) {
+                alert('This title is already in your watch history.');
+                return;
+            }
+
+            apiFetch('/api/history', {
+                method: 'POST',
+                body: JSON.stringify({
+                    tmdbId: contentData.tmdbId,
+                    type: contentData.type,
+                    title: contentData.title,
+                    poster: contentData.poster
+                })
+            }).then(function() {
+                isWatched = true;
+                updateWatchedBtn();
+            }).catch(function(err) {
+                alert(err.message);
+            });
+        }
+
+        function updateRatingUI(val) {
+            currentRating = val;
+            var stars = document.querySelectorAll('.star');
+            stars.forEach(function(star, index) {
+                star.classList.toggle('star-filled', index < val);
+            });
+            var labels = ['', 'Terrible', 'Bad', 'Poor', 'Below Average', 'Average', 'Fine', 'Good', 'Great', 'Excellent', 'Masterpiece'];
+            document.getElementById('rating-feedback').textContent = val + '/10 — ' + labels[val];
+        }
+
+        function setRating(val) {
+            updateRatingUI(val);
+
+            if (userReviewId) {
+                apiFetch('/api/reviews/' + userReviewId, {
+                    method: 'PUT',
+                    body: JSON.stringify({ rating: val })
+                }).catch(function(err) {
+                    alert(err.message);
+                });
+            }
+        }
+
         function submitReview() {
+            if (!contentData) return;
+
             var text = document.getElementById('review-input').value.trim();
+            if (currentRating === 0) {
+                alert('Please select a rating first.');
+                return;
+            }
             if (!text) {
                 alert('Write something first!');
                 return;
             }
-            var reviews = JSON.parse(localStorage.getItem('reviews-detail-' + contentId)) || [];
-            reviews.push(text);
-            localStorage.setItem('reviews-detail-' + contentId, JSON.stringify(reviews));
-            document.getElementById('review-input').value = '';
-            loadReviews();
+
+            if (userReviewId) {
+                apiFetch('/api/reviews/' + userReviewId, {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        rating: currentRating,
+                        review: text
+                    })
+                }).then(function() {
+                    document.getElementById('review-input').value = '';
+                    loadReviews();
+                }).catch(function(err) {
+                    alert(err.message);
+                });
+            } else {
+                apiFetch('/api/reviews', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        tmdbId: contentData.tmdbId,
+                        type: contentData.type,
+                        rating: currentRating,
+                        review: text
+                    })
+                }).then(function() {
+                    document.getElementById('review-input').value = '';
+                    loadReviews();
+                }).catch(function(err) {
+                    alert(err.message);
+                });
+            }
         }
 
         function loadReviews() {
-            var reviews = JSON.parse(localStorage.getItem('reviews-detail-' + contentId)) || [];
-            var list = document.getElementById('reviews-list');
-            if (reviews.length === 0) {
-                list.innerHTML = '';
+            if (!contentId || !getAuthToken()) {
+                document.getElementById('reviews-list').innerHTML = '';
                 return;
             }
-            list.innerHTML = reviews.map(function(r) {
-                return '<div class="review-card mb-3"><p class="review-text">' + r + '</p></div>';
-            }).join('');
-            loadSavedRating();
+
+            apiFetch('/api/reviews?tmdbId=' + contentId + '&type=' + contentType)
+                .then(function(data) {
+                    var list = document.getElementById('reviews-list');
+                    var reviews = data.reviews || [];
+                    var currentUserId = getCurrentUserId();
+
+                    userReviewId = null;
+                    reviews.forEach(function(review) {
+                        if (currentUserId && String(review.userId) === String(currentUserId)) {
+                            userReviewId = review.id;
+                            updateRatingUI(review.rating);
+                            document.getElementById('review-input').value = review.review;
+                        }
+                    });
+
+                    if (reviews.length === 0) {
+                        list.innerHTML = '';
+                        return;
+                    }
+
+                    list.innerHTML = reviews.map(function(review) {
+                        var author = review.user
+                            ? escapeHtml(review.user.name) + ' (@' + escapeHtml(review.user.username) + ')'
+                            : 'Anonymous';
+                        return '<div class="review-card mb-3">' +
+                            '<p class="review-author"><strong>' + author + '</strong></p>' +
+                            '<p class="review-rating">★ ' + review.rating + '/10</p>' +
+                            '<p class="review-text">' + escapeHtml(review.review) + '</p>' +
+                            '</div>';
+                    }).join('');
+                })
+                .catch(function(err) {
+                    console.error('Failed to load reviews:', err.message);
+                    document.getElementById('reviews-list').innerHTML = '';
+                });
         }
 
-        // ── NAVBAR SEARCH ──────────────────────────
         function goToSearch() {
             var query = document.getElementById('nav-search-input').value.trim();
             if (query) {
