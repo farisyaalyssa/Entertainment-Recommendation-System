@@ -22,6 +22,7 @@
             <a href="search.html" class="nav-link">Search</a>
             <a href="movies.html" class="nav-link">Movies</a>
             <a href="tvshows.html" class="nav-link active-link">TV Shows</a>
+            <a href="profile.html" class="nav-link">My List</a>
             <a href="profile.html" class="nav-avatar" id="userAvatar">A</a>
         </div>
     </nav>
@@ -47,6 +48,7 @@
         </section>
     </div>
 
+    <script src="../js/api.js"></script>
     <script>
         const shows = {
             dramaShows: [
@@ -98,8 +100,6 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             Object.keys(shows).forEach(k => renderGenre(k, shows[k]));
-            const s = localStorage.getItem('watchly_session');
-            if(s) document.getElementById('userAvatar').textContent = JSON.parse(s).user.name.charAt(0);
         });
     </script>
 </body>

@@ -139,6 +139,7 @@
         <div class="container"><p>&copy; 2026 WatchLy. All rights reserved.</p></div>
     </footer>
 
+    <script src="../js/api.js"></script>
     <script>
         // Movie Database for AI Recommendations
         const movieDatabase = {
@@ -327,10 +328,6 @@
             document.querySelector('.hero-next').onclick = () => go((current + 1) % slides.length);
             indicators.forEach((ind, i) => ind.onclick = () => go(i));
             setInterval(() => go((current + 1) % slides.length), 8000);
-
-            // Avatar
-            const s = localStorage.getItem('watchly_session');
-            if(s) document.getElementById('userAvatar').textContent = JSON.parse(s).user.name.charAt(0).toUpperCase();
         });
     </script>
 </body>

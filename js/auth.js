@@ -1,153 +1,144 @@
-// Authentication Manager
 class AuthManager {
     constructor() {
         this.currentUser = null;
         this.init();
     }
-    
+
     init() {
         this.checkSession();
         this.setupFormListeners();
     }
-    
-    // Check if user is logged in
+
     checkSession() {
-        const session = localStorage.getItem('watchly_session');
-        if (session) {
-            try {
-                const { user, expires } = JSON.parse(session);
-                if (Date.now() < expires) {
-                    this.currentUser = user;
-                    this.updateUI();
-                } else {
-                    localStorage.removeItem('watchly_session');
-                }
-            } catch (e) {
-                console.error('Session error:', e);
+        var session = localStorage.getItem('watchly_session');
+        if (!session) return;
+
+        try {
+            var parsed = JSON.parse(session);
+            if (Date.now() < parsed.expires) {
+                this.currentUser = parsed.user;
+                this.updateUI();
+            } else {
+                clearSession();
             }
+        } catch (e) {
+            console.error('Session error:', e);
+            clearSession();
         }
     }
-    
-    // Setup form listeners
+
     setupFormListeners() {
-        // Login form
-        const loginForm = document.getElementById('loginForm');
+        var loginForm = document.getElementById('loginForm');
         if (loginForm) {
             loginForm.addEventListener('submit', (e) => this.handleLogin(e));
         }
-        
-        // Register form
-        const registerForm = document.getElementById('preferencesForm');
+
+        var registerForm = document.getElementById('registerForm');
         if (registerForm) {
             registerForm.addEventListener('submit', (e) => this.handleRegister(e));
         }
     }
-    
-    // Handle login
+
+    needsOnboarding(user) {
+        return !user.preferences || !user.preferences.genres || user.preferences.genres.length < 3;
+    }
+
     async handleLogin(e) {
         e.preventDefault();
-        
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-        const remember = document.getElementById('rememberMe')?.checked || false;
-        
+
+        var email = document.getElementById('email').value.trim();
+        var password = document.getElementById('password').value;
+        var remember = document.getElementById('rememberMe') ? document.getElementById('rememberMe').checked : false;
+        var submitBtn = e.target.querySelector('button[type="submit"]');
+
         try {
-            // Mock login - replace with actual API call
-            await this.mockDelay(1000);
-            
-            const user = {
-                id: Date.now(),
-                email: email,
-                name: email.split('@')[0],
-                avatar: email.charAt(0).toUpperCase()
-            };
-            
-            this.currentUser = user;
-            
-            // Save session
-            const expires = Date.now() + (remember ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000);
-            localStorage.setItem('watchly_session', JSON.stringify({ user, expires }));
-            
-            // Check if first time user
-            const isFirstTime = !localStorage.getItem('watchly_preferences');
-            window.location.href = isFirstTime ? 'onboarding.html' : 'home.html';
-            
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Signing in...';
+            }
+
+            var data = await apiPublic('/api/auth/login', {
+                method: 'POST',
+                body: JSON.stringify({ email: email, password: password })
+            });
+
+            this.currentUser = data.user;
+            saveSession(data.user, data.token, remember);
+
+            window.location.href = this.needsOnboarding(data.user) ? 'onboarding.html' : 'home.html';
         } catch (error) {
-            this.showError('loginError', 'Invalid credentials. Please try again.');
+            this.showError('loginError', error.message || 'Invalid credentials. Please try again.');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Sign In';
+            }
         }
     }
-    
-    // Handle registration
+
     async handleRegister(e) {
         e.preventDefault();
-        
-        const genres = Array.from(document.querySelectorAll('input[name="genre"]:checked'))
-            .map(cb => cb.value);
-        const contentRating = document.getElementById('contentRating').value;
-        
-        // Save preferences
-        localStorage.setItem('watchly_preferences', JSON.stringify({
-            genres,
-            contentRating
-        }));
-        
-        // Mock registration
-        await this.mockDelay(1500);
-        
-        window.location.href = 'onboarding.html';
-    }
-    
-    // Update UI based on auth state
-    updateUI() {
-        const avatar = document.getElementById('userAvatar');
-        if (avatar && this.currentUser) {
-            avatar.textContent = this.currentUser.avatar || 'A';
+
+        var firstName = document.getElementById('firstName').value.trim();
+        var lastName = document.getElementById('lastName').value.trim();
+        var name = firstName + ' ' + lastName;
+        var username = document.getElementById('username').value.trim().toLowerCase();
+        var email = document.getElementById('regEmail').value.trim();
+        var password = document.getElementById('regPassword').value;
+        var submitBtn = e.target.querySelector('button[type="submit"]');
+
+        if (!document.getElementById('agreeTerms').checked) {
+            this.showError('registerError', 'Please agree to the terms to continue.');
+            return;
+        }
+
+        try {
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Creating account...';
+            }
+
+            var data = await apiPublic('/api/auth/register', {
+                method: 'POST',
+                body: JSON.stringify({
+                    name: name,
+                    username: username,
+                    email: email,
+                    password: password
+                })
+            });
+
+            this.currentUser = data.user;
+            saveSession(data.user, data.token, false);
+
+            window.location.href = 'onboarding.html';
+        } catch (error) {
+            this.showError('registerError', error.message || 'Registration failed. Please try again.');
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Create Account';
+            }
         }
     }
-    
-    // Show error message
+
+    updateUI() {
+        var avatar = document.getElementById('userAvatar');
+        if (avatar && this.currentUser) {
+            if (this.currentUser.avatar) {
+                avatar.innerHTML = '<img src="' + this.currentUser.avatar + '" alt="Avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
+            } else {
+                avatar.textContent = (this.currentUser.name || 'A').charAt(0).toUpperCase();
+            }
+        }
+    }
+
     showError(elementId, message) {
-        const errorEl = document.getElementById(elementId);
+        var errorEl = document.getElementById(elementId);
         if (errorEl) {
             errorEl.textContent = message;
             errorEl.classList.add('show');
-            setTimeout(() => errorEl.classList.remove('show'), 5000);
+            setTimeout(function() { errorEl.classList.remove('show'); }, 5000);
         }
     }
-    
-    // Mock API delay
-    mockDelay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-    
-    // Logout
-    logout() {
-        localStorage.removeItem('watchly_session');
-        window.location.href = '../index.html';
-    }
 }
 
-// Initialize auth manager
-const auth = new AuthManager();
-
-// Global functions
-function logout() {
-    auth.logout();
-}
-
-function toggleUserDropdown() {
-    const dropdown = document.getElementById('userDropdown');
-    if (dropdown) {
-        dropdown.classList.toggle('show');
-    }
-}
-
-// Close dropdown when clicking outside
-document.addEventListener('click', (e) => {
-    if (!e.target.closest('.user-menu')) {
-        const dropdown = document.getElementById('userDropdown');
-        if (dropdown) {
-            dropdown.classList.remove('show');
-        }
-    }
-});
+var auth = new AuthManager();

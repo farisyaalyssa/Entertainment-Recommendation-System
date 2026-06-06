@@ -43,6 +43,7 @@ router.post('/register', validateRegister, async (req, res) => {
 
     res.status(201).json({
       message: 'User registered successfully',
+      token: jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' }),
       user: formatUser(user),
     });
   } catch (error) {

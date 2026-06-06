@@ -22,9 +22,11 @@
         </div>
         <div class="d-flex align-items-center" id="nav-links">
             <a href="home.html" class="nav-link">Home</a>
+            <a href="search.html" class="nav-link">Search</a>
             <a href="movies.html" class="nav-link">Movies</a>
             <a href="tvshows.html" class="nav-link">TV Shows</a>
-            <a href="profile.html" class="nav-avatar">J</a>
+            <a href="profile.html" class="nav-link">My List</a>
+            <a href="profile.html" class="nav-avatar" id="userAvatar">A</a>
         </div>
     </nav>
 
@@ -106,12 +108,12 @@
     </div>
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/api.js"></script>
     <script>
 
         var API_KEY = '9702460f55f5b08f0ad2c93b27dcebf3';
         var BASE_URL = 'https://api.themoviedb.org/3';
         var IMG_URL = 'https://image.tmdb.org/t/p/';
-        var API_BASE = 'http://localhost:5000';
 
         var params = new URLSearchParams(window.location.search);
         var contentId = params.get('id');
@@ -123,57 +125,6 @@
         var inWatchlist = false;
         var inFavourites = false;
         var isWatched = false;
-
-        function getAuthToken() {
-            var token = localStorage.getItem('watchly_token');
-            if (token) return token;
-
-            try {
-                var session = JSON.parse(localStorage.getItem('watchly_session') || '{}');
-                return session.token || null;
-            } catch (e) {
-                return null;
-            }
-        }
-
-        function getCurrentUserId() {
-            try {
-                var session = JSON.parse(localStorage.getItem('watchly_session') || '{}');
-                return session.user ? (session.user.id || session.user._id) : null;
-            } catch (e) {
-                return null;
-            }
-        }
-
-        function requireAuth() {
-            if (!getAuthToken()) {
-                alert('Please log in to use this feature.');
-                window.location.href = 'login.html';
-                return false;
-            }
-            return true;
-        }
-
-        function apiFetch(path, options) {
-            if (!requireAuth()) {
-                return Promise.reject(new Error('Not authenticated'));
-            }
-
-            options = options || {};
-            options.headers = Object.assign({
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + getAuthToken()
-            }, options.headers || {});
-
-            return fetch(API_BASE + path, options).then(function(res) {
-                return res.json().then(function(data) {
-                    if (!res.ok) {
-                        throw new Error(data.message || 'Request failed');
-                    }
-                    return data;
-                });
-            });
-        }
 
         function escapeHtml(text) {
             var div = document.createElement('div');

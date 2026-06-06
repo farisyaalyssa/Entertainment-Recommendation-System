@@ -109,6 +109,20 @@
 
 .user-menu {
     margin-left: 10px;
+    position: relative;
+    z-index: 1050;
+}
+
+#main-navbar .user-dropdown {
+    z-index: 1051;
+}
+
+#main-navbar .user-dropdown .logout-link {
+    color: #F63049;
+}
+
+#main-navbar .user-dropdown .logout-link:hover {
+    color: #ffffff;
 }
 
 .avatar-btn {

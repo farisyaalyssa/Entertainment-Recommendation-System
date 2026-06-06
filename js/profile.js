@@ -1,52 +1,9 @@
-var API_BASE = 'http://localhost:5000';
 var TMDB_KEY = '9702460f55f5b08f0ad2c93b27dcebf3';
 var TMDB_BASE = 'https://api.themoviedb.org/3';
 
 var selectedOption = null;
 var pendingAvatar = null;
 var currentUser = null;
-
-function getAuthToken() {
-    var token = localStorage.getItem('watchly_token');
-    if (token) return token;
-
-    try {
-        var session = JSON.parse(localStorage.getItem('watchly_session') || '{}');
-        return session.token || null;
-    } catch (e) {
-        return null;
-    }
-}
-
-function requireAuth() {
-    if (!getAuthToken()) {
-        alert('Please log in to view your profile.');
-        window.location.href = 'login.html';
-        return false;
-    }
-    return true;
-}
-
-function apiFetch(path, options) {
-    if (!requireAuth()) {
-        return Promise.reject(new Error('Not authenticated'));
-    }
-
-    options = options || {};
-    options.headers = Object.assign({
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + getAuthToken()
-    }, options.headers || {});
-
-    return fetch(API_BASE + path, options).then(function(res) {
-        return res.json().then(function(data) {
-            if (!res.ok) {
-                throw new Error(data.message || 'Request failed');
-            }
-            return data;
-        });
-    });
-}
 
 function escapeHtml(text) {
     var div = document.createElement('div');
@@ -191,7 +148,7 @@ function loadMyReviews() {
 }
 
 function loadProfilePage() {
-    if (!requireAuth()) return;
+    if (!requireAuth('login.html')) return;
 
     apiFetch('/api/users/profile').then(function(data) {
         renderProfile(data.user);
@@ -284,9 +241,8 @@ function selectToggle(type) {
     document.getElementById('confirm-btn').disabled = false;
 }
 
-function clearSession() {
-    localStorage.removeItem('watchly_token');
-    localStorage.removeItem('watchly_session');
+function clearSessionAndRedirect() {
+    logout();
 }
 
 function confirmAction() {
@@ -297,8 +253,7 @@ function confirmAction() {
         body: JSON.stringify({ action: selectedOption })
     }).then(function(data) {
         alert(data.message);
-        clearSession();
-        window.location.href = '../index.html';
+        clearSessionAndRedirect();
     }).catch(function(err) {
         alert(err.message);
     });
