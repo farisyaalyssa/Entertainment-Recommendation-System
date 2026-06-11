@@ -25,118 +25,25 @@
                 <h2>Select Your Favorite Genres</h2>
                 <p>Choose at least 3 genres to get started</p>
                 <div class="genre-selection-grid">
-                    <div class="genre-chip" onclick="toggleGenre(this)" data-genre="Action">
-                        <i class="fas fa-bolt"></i> Action
-                    </div>
-                    <div class="genre-chip" onclick="toggleGenre(this)" data-genre="Comedy">
-                        <i class="fas fa-face-laugh-beam"></i> Comedy
-                    </div>
-                    <div class="genre-chip" onclick="toggleGenre(this)" data-genre="Drama">
-                        <i class="fas fa-theater-masks"></i> Drama
-                    </div>
-                    <div class="genre-chip" onclick="toggleGenre(this)" data-genre="Horror">
-                        <i class="fas fa-ghost"></i> Horror
-                    </div>
-                    <div class="genre-chip" onclick="toggleGenre(this)" data-genre="Sci-Fi">
-                        <i class="fas fa-rocket"></i> Sci-Fi
-                    </div>
-                    <div class="genre-chip" onclick="toggleGenre(this)" data-genre="Romance">
-                        <i class="fas fa-heart"></i> Romance
-                    </div>
-                    <div class="genre-chip" onclick="toggleGenre(this)" data-genre="Thriller">
-                        <i class="fas fa-user-secret"></i> Thriller
-                    </div>
-                    <div class="genre-chip" onclick="toggleGenre(this)" data-genre="Animation">
-                        <i class="fas fa-palette"></i> Animation
-                    </div>
+                    <div class="genre-chip" onclick="toggleGenre(this)" data-genre="Action"><i class="fas fa-bolt"></i> Action</div>
+                    <div class="genre-chip" onclick="toggleGenre(this)" data-genre="Comedy"><i class="fas fa-face-laugh-beam"></i> Comedy</div>
+                    <div class="genre-chip" onclick="toggleGenre(this)" data-genre="Drama"><i class="fas fa-theater-masks"></i> Drama</div>
+                    <div class="genre-chip" onclick="toggleGenre(this)" data-genre="Horror"><i class="fas fa-ghost"></i> Horror</div>
+                    <div class="genre-chip" onclick="toggleGenre(this)" data-genre="Sci-Fi"><i class="fas fa-rocket"></i> Sci-Fi</div>
+                    <div class="genre-chip" onclick="toggleGenre(this)" data-genre="Romance"><i class="fas fa-heart"></i> Romance</div>
+                    <div class="genre-chip" onclick="toggleGenre(this)" data-genre="Thriller"><i class="fas fa-user-secret"></i> Thriller</div>
+                    <div class="genre-chip" onclick="toggleGenre(this)" data-genre="Animation"><i class="fas fa-palette"></i> Animation</div>
                 </div>
                 <div class="selection-counter">Selected: <span id="selectedCount">0</span>/3 minimum</div>
-                <button class="btn btn-primary btn-large" id="continueBtn" disabled onclick="goStep(3)">
-                    Continue <i class="fas fa-arrow-right"></i>
-                </button>
+                <button class="btn btn-primary btn-large" id="continueBtn" disabled onclick="goStep(3)">Continue <i class="fas fa-arrow-right"></i></button>
             </div>
         </div>
 
-        <!-- Step 3: Rate Movies (4 Movies) -->
+        <!-- Step 3: Loading -->
         <div class="onboarding-step" id="step3">
             <div class="onboarding-content">
-                <h2>Rate Some Movies (Optional)</h2>
-                <p>Help us understand your taste better</p>
-                <div class="movie-rating-carousel">
-                    <!-- Movie 1: The Dark Knight -->
-                    <div class="movie-rating-card">
-                        <img src="https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" 
-                             alt="The Dark Knight"
-                             onerror="this.src='https://via.placeholder.com/200x300/1a2d47/F63049?text=Dark+Knight'">
-                        <h4>The Dark Knight</h4>
-                        <div class="star-rating" data-movie="1">
-                            <i class="far fa-star" onclick="rate(1,1)"></i>
-                            <i class="far fa-star" onclick="rate(1,2)"></i>
-                            <i class="far fa-star" onclick="rate(1,3)"></i>
-                            <i class="far fa-star" onclick="rate(1,4)"></i>
-                            <i class="far fa-star" onclick="rate(1,5)"></i>
-                        </div>
-                    </div>
-
-                    <!-- Movie 2: Inception -->
-                    <div class="movie-rating-card">
-                        <img src="https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg" 
-                             alt="Inception"
-                             onerror="this.src='https://via.placeholder.com/200x300/1a2d47/F63049?text=Inception'">
-                        <h4>Inception</h4>
-                        <div class="star-rating" data-movie="2">
-                            <i class="far fa-star" onclick="rate(2,1)"></i>
-                            <i class="far fa-star" onclick="rate(2,2)"></i>
-                            <i class="far fa-star" onclick="rate(2,3)"></i>
-                            <i class="far fa-star" onclick="rate(2,4)"></i>
-                            <i class="far fa-star" onclick="rate(2,5)"></i>
-                        </div>
-                    </div>
-
-                    <!-- Movie 3: Interstellar -->
-                    <div class="movie-rating-card">
-                        <img src="https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" 
-                             alt="Interstellar"
-                             onerror="this.src='https://via.placeholder.com/200x300/1a2d47/F63049?text=Interstellar'">
-                        <h4>Interstellar</h4>
-                        <div class="star-rating" data-movie="3">
-                            <i class="far fa-star" onclick="rate(3,1)"></i>
-                            <i class="far fa-star" onclick="rate(3,2)"></i>
-                            <i class="far fa-star" onclick="rate(3,3)"></i>
-                            <i class="far fa-star" onclick="rate(3,4)"></i>
-                            <i class="far fa-star" onclick="rate(3,5)"></i>
-                        </div>
-                    </div>
-
-                    <!-- Movie 4: Breaking Bad -->
-                    <div class="movie-rating-card">
-                        <img src="https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg" 
-                             alt="Breaking Bad"
-                             onerror="this.src='https://via.placeholder.com/200x300/1a2d47/F63049?text=Breaking+Bad'">
-                        <h4>Breaking Bad</h4>
-                        <div class="star-rating" data-movie="4">
-                            <i class="far fa-star" onclick="rate(4,1)"></i>
-                            <i class="far fa-star" onclick="rate(4,2)"></i>
-                            <i class="far fa-star" onclick="rate(4,3)"></i>
-                            <i class="far fa-star" onclick="rate(4,4)"></i>
-                            <i class="far fa-star" onclick="rate(4,5)"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="onboarding-actions">
-                    <button class="btn btn-secondary" onclick="finish()">Skip</button>
-                    <button class="btn btn-primary btn-large" onclick="finish()">
-                        Finish <i class="fas fa-check"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Step 4: Loading -->
-        <div class="onboarding-step" id="step4">
-            <div class="onboarding-content">
                 <div class="loading-animation"><i class="fas fa-spinner fa-spin"></i></div>
-                <h2>Generating Your Recommendations...</h2>
+                <h2>Setting up your profile...</h2>
             </div>
         </div>
     </div>
@@ -144,55 +51,74 @@
     <script src="../js/api.js"></script>
     <script src="../js/auth.js"></script>
     <script>
-        var genres = [], ratings = {};
+        var genres = [];
 
+        // Redirect to login if not authenticated
         if (!getAuthToken()) {
             window.location.href = 'login.html';
         }
 
-        function goStep(n) {
-            if (n === 3 && genres.length < 3) {
+        // Navigate between steps
+        function goStep(stepNumber) {
+            if (stepNumber === 3 && genres.length < 3) {
                 alert('Please select at least 3 genres to continue');
                 return;
             }
-            document.querySelectorAll('.onboarding-step').forEach(function(s) { s.classList.remove('active'); });
-            document.getElementById('step' + n).classList.add('active');
-            if (n === 4) {
-                setTimeout(function() { window.location.href = 'home.html'; }, 2000);
+
+            // Hide all steps, show the selected one
+            document.querySelectorAll('.onboarding-step').forEach(function(step) {
+                step.classList.remove('active');
+            });
+            document.getElementById('step' + stepNumber).classList.add('active');
+
+            // If moving to step 3, save preferences to database
+            if (stepNumber === 3) {
+                savePreferences();
             }
         }
 
-        function toggleGenre(el) {
-            var g = el.dataset.genre;
-            el.classList.toggle('selected');
-            genres = genres.includes(g) ? genres.filter(function(x) { return x !== g; }) : genres.concat(g);
+        // Toggle genre selection
+        function toggleGenre(element) {
+            var genre = element.dataset.genre;
+            element.classList.toggle('selected');
+
+            if (genres.indexOf(genre) > -1) {
+                genres = genres.filter(function(g) { return g !== genre; });
+            } else {
+                genres.push(genre);
+            }
+
+            // Update counter and enable/disable button
             document.getElementById('selectedCount').textContent = genres.length;
             document.getElementById('continueBtn').disabled = genres.length < 3;
         }
 
-        function rate(id, val) {
-            ratings[id] = val;
-            var stars = document.querySelector('[data-movie="' + id + '"]').children;
-            for (var i = 0; i < stars.length; i++) {
-                stars[i].className = i < val ? 'fas fa-star' : 'far fa-star';
-            }
-        }
-
-        function finish() {
+        // Save selected genres to the database via API
+        function savePreferences() {
             var payload = { genres: genres };
 
             apiFetch('/api/users/preferences', {
                 method: 'PUT',
                 body: JSON.stringify(payload)
-            }).then(function(data) {
-                if (data.user) {
+            })
+            .then(function(response) {
+                // Update local session with the new user data
+                if (response.user) {
                     var session = JSON.parse(localStorage.getItem('watchly_session') || '{}');
-                    session.user = data.user;
+                    session.user = response.user;
                     localStorage.setItem('watchly_session', JSON.stringify(session));
                 }
-                goStep(4);
-            }).catch(function(err) {
-                alert(err.message);
+                
+                // Redirect to home page after a short delay
+                setTimeout(function() {
+                    window.location.href = 'home.html';
+                }, 1500);
+            })
+            .catch(function(error) {
+                console.error('Error saving preferences:', error);
+                alert('Failed to save preferences. Please try again.');
+                // Go back to step 2 if it fails
+                goStep(2); 
             });
         }
     </script>

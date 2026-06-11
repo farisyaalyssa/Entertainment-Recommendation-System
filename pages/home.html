@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="../css/home.css">
 </head>
 <body>
-    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg" id="main-navbar">
         <a class="navbar-brand" href="home.html">WatchLy</a>
         <div class="nav-search">
@@ -27,95 +26,16 @@
         </div>
     </nav>
 
-    <!-- Hero Carousel -->
-    <section class="hero-carousel">
-        <div class="hero-slide active">
-            <img src="https://image.tmdb.org/t/p/original/qJ2tW6WMUDux911r6m7haRef0WH.jpg" alt="The Dark Knight" class="hero-bg" onerror="this.onerror=null; this.src='https://via.placeholder.com/1920x650/1a2d47/F63049?text=The+Dark+Knight';">
-            <div class="hero-overlay"></div>
-            <div class="hero-content">
-                <span class="hero-badge">Featured</span>
-                <h1 class="hero-title">The Dark Knight</h1>
-                <div class="hero-meta">
-                    <span class="rating"><i class="fas fa-star"></i> 9.0</span>
-                    <span>2008</span>
-                    <span>2h 32m</span>
-                    <span>Action - Crime - Drama</span>
-                </div>
-                <p class="hero-description">When the menace known as the Joker wreaks havoc on Gotham, Batman must accept one of the greatest psychological tests of his ability to fight injustice.</p>
-                <div class="hero-buttons">
-                    <button class="btn btn-primary" onclick="window.location.href='content-detail.html?id=155&type=movie'"><i class="fas fa-play"></i> Watch Now</button>
-                    <button class="btn btn-secondary" onclick="addToWatchlist(155)"><i class="fas fa-plus"></i> My List</button>
-                </div>
-            </div>
-        </div>
-        <div class="hero-slide">
-            <img src="https://image.tmdb.org/t/p/original/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg" alt="Inception" class="hero-bg" onerror="this.onerror=null; this.src='https://via.placeholder.com/1920x650/1a2d47/F63049?text=Inception';">
-            <div class="hero-overlay"></div>
-            <div class="hero-content">
-                <span class="hero-badge">New Release</span>
-                <h1 class="hero-title">Inception</h1>
-                <div class="hero-meta">
-                    <span class="rating"><i class="fas fa-star"></i> 8.8</span>
-                    <span>2010</span>
-                    <span>2h 28m</span>
-                    <span>Sci-Fi - Thriller</span>
-                </div>
-                <p class="hero-description">A thief who steals corporate secrets through dream-sharing technology is given the inverse task of planting an idea into a CEO's mind.</p>
-                <div class="hero-buttons">
-                    <button class="btn btn-primary" onclick="window.location.href='content-detail.html?id=27205&type=movie'"><i class="fas fa-play"></i> Watch Now</button>
-                    <button class="btn btn-secondary" onclick="addToWatchlist(27205)"><i class="fas fa-plus"></i> My List</button>
-                </div>
-            </div>
-        </div>
-        <div class="hero-slide">
-            <img src="https://image.tmdb.org/t/p/original/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" alt="Interstellar" class="hero-bg" onerror="this.onerror=null; this.src='https://via.placeholder.com/1920x650/1a2d47/F63049?text=Interstellar';">
-            <div class="hero-overlay"></div>
-            <div class="hero-content">
-                <span class="hero-badge">Trending</span>
-                <h1 class="hero-title">Interstellar</h1>
-                <div class="hero-meta">
-                    <span class="rating"><i class="fas fa-star"></i> 8.7</span>
-                    <span>2014</span>
-                    <span>2h 49m</span>
-                    <span>Sci-Fi - Drama - Adventure</span>
-                </div>
-                <p class="hero-description">A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.</p>
-                <div class="hero-buttons">
-                    <button class="btn btn-primary" onclick="window.location.href='content-detail.html?id=157336&type=movie'"><i class="fas fa-play"></i> Watch Now</button>
-                    <button class="btn btn-secondary" onclick="addToWatchlist(157336)"><i class="fas fa-plus"></i> My List</button>
-                </div>
-            </div>
-        </div>
-        <button class="hero-control hero-prev"><i class="fas fa-chevron-left"></i></button>
-        <button class="hero-control hero-next"><i class="fas fa-chevron-right"></i></button>
-        <div class="hero-indicators">
-            <button class="indicator active"></button>
-            <button class="indicator"></button>
-            <button class="indicator"></button>
-        </div>
+    <section class="hero-carousel" id="heroCarousel">
+        <button class="hero-control hero-prev" id="heroPrev"><i class="fas fa-chevron-left"></i></button>
+        <button class="hero-control hero-next" id="heroNext"><i class="fas fa-chevron-right"></i></button>
+        <div class="hero-indicators" id="heroIndicators"></div>
     </section>
 
-    <!-- Main Content -->
-    <main class="content-main">
-        <section class="content-row">
-            <div class="row-header"><h2 class="row-title">Recommended For You</h2><a href="#" class="row-link">View All</a></div>
-            <div class="row-content" id="recommendedRow"></div>
-        </section>
-        <section class="content-row">
-            <div class="row-header"><h2 class="row-title">Because You Watched <span style="color:#F63049">Action</span></h2><a href="#" class="row-link">View All</a></div>
-            <div class="row-content" id="becauseRow"></div>
-        </section>
-        <section class="content-row">
-            <div class="row-header"><h2 class="row-title">Top 10 Popular</h2><a href="#" class="row-link">View All</a></div>
-            <div class="row-content" id="topMoviesRow"></div>
-        </section>
-        <section class="content-row">
-            <div class="row-header"><h2 class="row-title">Trending Now</h2><a href="#" class="row-link">View All</a></div>
-            <div class="row-content" id="trendingRow"></div>
-        </section>
+    <main class="content-main" id="dynamic-content">
+        <p style="text-align:center; padding: 50px; color: #888;">Loading your personalized recommendations...</p>
     </main>
 
-    <!-- AI Chat Widget -->
     <div class="chat-widget">
         <div class="chat-container" id="chatContainer">
             <div class="chat-header">
@@ -123,7 +43,7 @@
                 <button class="chat-close" onclick="toggleChat()">&times;</button>
             </div>
             <div class="chat-messages" id="chatMessages">
-                <div class="chat-message bot">Hello! I'm your movie assistant. Tell me what genre you're in the mood for (drama, action, comedy, sci-fi, romance) or describe what you're looking for!</div>
+                <div class="chat-message bot">Hello! Tell me what genre you are in the mood for (drama, action, comedy, sci-fi, romance)!</div>
             </div>
             <div class="chat-input-area">
                 <input type="text" class="chat-input" id="chatInput" placeholder="Type your preference..." onkeypress="handleChatKeyPress(event)">
@@ -141,193 +61,307 @@
 
     <script src="../js/api.js"></script>
     <script>
-        // Movie Database for AI Recommendations
-        const movieDatabase = {
-            drama: [
-                { id: 238, title: "The Godfather", year: 1972, rating: 9.2, poster: "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg" },
-                { id: 278, title: "The Shawshank Redemption", year: 1994, rating: 9.3, poster: "https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg" },
-                { id: 13, title: "Forrest Gump", year: 1994, rating: 8.8, poster: "https://image.tmdb.org/t/p/w500/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg" },
-                { id: 389, title: "12 Angry Men", year: 1957, rating: 9.0, poster: "https://image.tmdb.org/t/p/w500/ow3wq89wM8qd5X7hWKxiRfsFf9C.jpg" },
-                { id: 19404, title: "Dilwale Dulhania Le Jayenge", year: 1995, rating: 8.7, poster: "https://image.tmdb.org/t/p/w500/2CAL2433ZeIihfX1Hb2139CX0pW.jpg" }
-            ],
-            action: [
-                { id: 155, title: "The Dark Knight", year: 2008, rating: 9.0, poster: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" },
-                { id: 245891, title: "John Wick", year: 2014, rating: 7.4, poster: "https://image.tmdb.org/t/p/w500/fZPSd91yGE9fCcCe6OoQr6E3Bev.jpg" },
-                { id: 299536, title: "Avengers: Infinity War", year: 2018, rating: 8.3, poster: "https://image.tmdb.org/t/p/w500/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg" },
-                { id: 299534, title: "Avengers: Endgame", year: 2019, rating: 8.4, poster: "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg" },
-                { id: 1726, title: "Iron Man", year: 2008, rating: 7.9, poster: "https://image.tmdb.org/t/p/w500/78lPtwv72eTNqFW9COBYI0dWDJa.jpg" }
-            ],
-            comedy: [
-                { id: 550, title: "Fight Club", year: 1999, rating: 8.8, poster: "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg" },
-                { id: 680, title: "Pulp Fiction", year: 1994, rating: 8.9, poster: "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg" },
-                { id: 324857, title: "Spider-Man: Into the Spider-Verse", year: 2018, rating: 8.4, poster: "https://image.tmdb.org/t/p/w500/iiZZdoQBEYBv6id8su7ImL0oCbD.jpg" }
-            ],
-            "sci-fi": [
-                { id: 27205, title: "Inception", year: 2010, rating: 8.8, poster: "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg" },
-                { id: 157336, title: "Interstellar", year: 2014, rating: 8.7, poster: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg" },
-                { id: 603, title: "The Matrix", year: 1999, rating: 8.7, poster: "https://image.tmdb.org/t/p/w500/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg" },
-                { id: 438631, title: "Dune", year: 2021, rating: 8.0, poster: "https://image.tmdb.org/t/p/w500/d5NXSklpcvkC173QCnEh3w0VBgX.jpg" }
-            ],
-            romance: [
-                { id: 11036, title: "The Notebook", year: 2004, rating: 7.8, poster: "https://image.tmdb.org/t/p/w500/qom1SZSENdmHFNZBXbtJAU0WTlC.jpg" },
-                { id: 597, title: "Titanic", year: 1997, rating: 7.9, poster: "https://image.tmdb.org/t/p/w500/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg" },
-                { id: 313369, title: "La La Land", year: 2016, rating: 8.0, poster: "https://image.tmdb.org/t/p/w500/uDO8zWDhfWwo7KS6jgbpcrW3aO.jpg" },
-                { id: 1400, title: "Pride & Prejudice", year: 2005, rating: 8.1, poster: "https://image.tmdb.org/t/p/w500/sGjIvtVvTlWnia2zfJfHz81pZ9Q.jpg" }
-            ]
+        var TMDB_API_KEY = '434da963b3d04ec74b1a61e704853ac7';
+        var TMDB_BASE_URL = 'https://api.themoviedb.org/3';
+        var TMDB_IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
+        var TMDB_BACKDROP_URL = 'https://image.tmdb.org/t/p/original';
+
+        var GENRE_MAP = {
+            'Action': 28, 'Comedy': 35, 'Drama': 18, 'Horror': 27,
+            'Sci-Fi': 878, 'Romance': 10749, 'Thriller': 53, 'Animation': 16
         };
 
-        // Home page data
-        const homeData = {
-            recommended: [
-                { id: 550, title: "Fight Club", year: 1999, rating: 8.8, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg" },
-                { id: 13, title: "Forrest Gump", year: 1994, rating: 8.8, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg" },
-                { id: 680, title: "Pulp Fiction", year: 1994, rating: 8.9, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg" },
-                { id: 389, title: "12 Angry Men", year: 1957, rating: 9.0, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/ow3wq89wM8qd5X7hWKxiRfsFf9C.jpg" },
-                { id: 19404, title: "Dilwale Dulhania Le Jayenge", year: 1995, rating: 8.7, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/2CAL2433ZeIihfX1Hb2139CX0pW.jpg" }
-            ],
-            because: [
-                { id: 245891, title: "John Wick", year: 2014, rating: 7.4, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/fZPSd91yGE9fCcCe6OoQr6E3Bev.jpg" },
-                { id: 324857, title: "Spider-Man: Into the Spider-Verse", year: 2018, rating: 8.4, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/iiZZdoQBEYBv6id8su7ImL0oCbD.jpg" },
-                { id: 299536, title: "Avengers: Infinity War", year: 2018, rating: 8.3, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg" },
-                { id: 299534, title: "Avengers: Endgame", year: 2019, rating: 8.4, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg" },
-                { id: 1726, title: "Iron Man", year: 2008, rating: 7.9, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/78lPtwv72eTNqFW9COBYI0dWDJa.jpg" },
-                { id: 1771, title: "Captain America", year: 2011, rating: 7.0, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/vSNxAJTlD0r02V9sPYpOjqDZXUK.jpg" }
-            ],
-            topMovies: [
-                { id: 238, title: "The Godfather", year: 1972, rating: 9.2, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/3bhkrj58Vtu7enYsRolD1fZdja1.jpg" },
-                { id: 278, title: "The Shawshank Redemption", year: 1994, rating: 9.3, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg" },
-                { id: 389, title: "12 Angry Men", year: 1957, rating: 9.0, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/ow3wq89wM8qd5X7hWKxiRfsFf9C.jpg" },
-                { id: 129, title: "Spirited Away", year: 2001, rating: 8.6, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg" },
-                { id: 155, title: "The Dark Knight", year: 2008, rating: 9.0, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg" },
-                { id: 680, title: "Pulp Fiction", year: 1994, rating: 8.9, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg" },
-                { id: 13, title: "Forrest Gump", year: 1994, rating: 8.8, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg" },
-                { id: 550, title: "Fight Club", year: 1999, rating: 8.8, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg" },
-                { id: 19404, title: "Dilwale Dulhania Le Jayenge", year: 1995, rating: 8.7, contentType: "movie", poster: "https://image.tmdb.org/t/p/w500/2CAL2433ZeIihfX1Hb2139CX0pW.jpg" }
-            ],
-            trending: [
-                { id: 94997, title: "House of the Dragon", year: 2022, rating: 8.5, contentType: "tv", poster: "https://image.tmdb.org/t/p/w500/7QMsOTMUswlwxJP0rTTZfmz2tX2.jpg" },
-                { id: 85271, title: "WandaVision", year: 2021, rating: 8.4, contentType: "tv", poster: "https://image.tmdb.org/t/p/w500/glKDfE6btIRcVB5zrjspRIs4r52.jpg" },
-                { id: 60735, title: "The Flash", year: 2023, rating: 7.0, contentType: "tv", poster: "https://image.tmdb.org/t/p/w500/rktDFPbfHfUbArZ6OOOKsXcv0Bm.jpg" },
-                { id: 76479, title: "The Boys", year: 2019, rating: 8.7, contentType: "tv", poster: "https://image.tmdb.org/t/p/w500/stTEycfG9928HYGEISBFaG1ngjM.jpg" },
-                { id: 1396, title: "Breaking Bad", year: 2008, rating: 9.5, contentType: "tv", poster: "https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg" },
-                { id: 1668, title: "Friends", year: 1994, rating: 8.9, contentType: "tv", poster: "https://image.tmdb.org/t/p/w500/f496cm9enuEsZkSPzCwnGSEKJwv.jpg" }
-            ]
-        };
+        function fetchNowPlayingMovies() {
+            var url = TMDB_BASE_URL + '/movie/now_playing?api_key=' + TMDB_API_KEY;
+            return fetch(url).then(function(res) { return res.json(); }).then(function(data) {
+                return data.results.slice(0, 5); 
+            }).catch(function(err) { console.error(err); return []; });
+        }
 
-        // Render function
-        function renderRow(id, items) {
-            const container = document.getElementById(id);
-            if (!container) return;
+        function fetchMoviesByMultipleGenres(genreIds) {
+            var url = TMDB_BASE_URL + '/discover/movie?api_key=' + TMDB_API_KEY + '&with_genres=' + genreIds.join(',') + '&sort_by=popularity.desc';
+            return fetch(url).then(function(res) { return res.json(); }).then(function(data) {
+                return formatTmdbResults(data.results);
+            }).catch(function(err) { console.error(err); return []; });
+        }
+
+        function fetchTopMoviesByGenre(genreId) {
+            var url = TMDB_BASE_URL + '/discover/movie?api_key=' + TMDB_API_KEY + '&with_genres=' + genreId + '&sort_by=vote_average.desc';
+            return fetch(url).then(function(res) { return res.json(); }).then(function(data) {
+                return formatTmdbResults(data.results);
+            }).catch(function(err) { console.error(err); return []; });
+        }
+
+        function fetchTrendingMovies() {
+            var url = TMDB_BASE_URL + '/trending/movie/week?api_key=' + TMDB_API_KEY;
+            return fetch(url).then(function(res) { return res.json(); }).then(function(data) {
+                return formatTmdbResults(data.results);
+            }).catch(function(err) { console.error(err); return []; });
+        }
+
+        function formatTmdbResults(results) {
+            if (!results) return [];
+            return results.slice(0, 12).map(function(movie) {
+                return {
+                    id: movie.id,
+                    title: movie.title,
+                    year: movie.release_date ? movie.release_date.substring(0, 4) : 'N/A',
+                    rating: movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A',
+                    contentType: 'movie',
+                    poster: movie.poster_path ? TMDB_IMAGE_URL + movie.poster_path : ''
+                };
+            });
+        }
+
+        function setupHeroCarousel(movies) {
+            var carousel = document.getElementById('heroCarousel');
+            var indicatorsContainer = document.getElementById('heroIndicators');
             
-            container.innerHTML = items.map(i => {
-                const detailUrl = `content-detail.html?id=${i.id}&type=${i.contentType}`;
-                return `
-                    <a href="${detailUrl}" style="text-decoration:none;color:inherit;display:block;">
-                        <div class="content-card">
-                            <img src="${i.poster}" alt="${i.title}" onerror="this.onerror=null; this.src='https://via.placeholder.com/200x300/1a2d47/F63049?text=${encodeURIComponent(i.title)}';">
-                            <div class="card-overlay">
-                                <h4>${i.title}</h4>
-                                ${i.rating ? `<p><i class="fas fa-star"></i> ${i.rating}</p>` : ''}
-                                <button class="btn-add" onclick="event.stopPropagation(); addToWatchlist(${i.id}); return false;"><i class="fas fa-plus"></i></button>
-                            </div>
-                        </div>
-                    </a>
-                `;
+            var oldSlides = carousel.querySelectorAll('.hero-slide');
+            for (var i = 0; i < oldSlides.length; i++) {
+                oldSlides[i].remove();
+            }
+            indicatorsContainer.innerHTML = '';
+
+            if (movies.length === 0) return;
+
+            for (var i = 0; i < movies.length; i++) {
+                var movie = movies[i];
+                var bgUrl = movie.backdrop_path ? TMDB_BACKDROP_URL + movie.backdrop_path : '';
+                var year = movie.release_date ? movie.release_date.substring(0, 4) : 'New Release';
+                var overview = movie.overview ? movie.overview.substring(0, 150) + '...' : '';
+
+                var slide = document.createElement('div');
+                slide.className = 'hero-slide' + (i === 0 ? ' active' : '');
+                slide.innerHTML = 
+                    '<img src="' + bgUrl + '" alt="' + movie.title + '" class="hero-bg" onerror="this.src=\'https://via.placeholder.com/1920x650/1a2d47/F63049?text=No+Image\'">' +
+                    '<div class="hero-overlay"></div>' +
+                    '<div class="hero-content">' +
+                        '<span class="hero-badge">' + year + '</span>' +
+                        '<h1 class="hero-title">' + movie.title + '</h1>' +
+                        '<div class="hero-meta"><span class="rating"><i class="fas fa-star"></i> ' + movie.vote_average.toFixed(1) + '</span></div>' +
+                        '<p class="hero-description">' + overview + '</p>' +
+                        '<div class="hero-buttons">' +
+                            '<button class="btn btn-primary" onclick="window.location.href=\'content-detail.html?id=' + movie.id + '&type=movie\'"><i class="fas fa-play"></i> Watch Now</button>' +
+                            '<button class="btn btn-secondary" onclick="addToWatchlist(' + movie.id + ', \'movie\')"><i class="fas fa-plus"></i> My List</button>' +
+                        '</div>' +
+                    '</div>';
+                
+                carousel.insertBefore(slide, document.getElementById('heroPrev'));
+
+                var indicator = document.createElement('button');
+                indicator.className = 'indicator' + (i === 0 ? ' active' : '');
+                indicator.onclick = (function(index) {
+                    return function() { goToSlide(index); };
+                })(i);
+                indicatorsContainer.appendChild(indicator);
+            }
+
+            var slides = document.querySelectorAll('.hero-slide');
+            var indicators = document.querySelectorAll('.indicator');
+            var current = 0;
+            var total = slides.length;
+
+            function goToSlide(index) {
+                slides[current].classList.remove('active');
+                indicators[current].classList.remove('active');
+                current = index;
+                slides[current].classList.add('active');
+                indicators[current].classList.add('active');
+            }
+
+            document.getElementById('heroPrev').onclick = function() {
+                goToSlide((current - 1 + total) % total);
+            };
+            document.getElementById('heroNext').onclick = function() {
+                goToSlide((current + 1) % total);
+            };
+
+            setInterval(function() {
+                goToSlide((current + 1) % total);
+            }, 8000);
+        }
+
+        function createRowHTML(title, items) {
+            if (!items || items.length === 0) return '';
+            
+            var cardsHTML = items.map(function(item) {
+                return '<a href="content-detail.html?id=' + item.id + '&type=' + item.contentType + '" class="card-link">' +
+                    '<div class="content-card">' +
+                        '<img src="' + item.poster + '" alt="' + item.title + '" onerror="this.src=\'https://via.placeholder.com/200x300/1a2d47/F63049?text=No+Image\'">' +
+                        '<div class="card-overlay">' +
+                            '<h4>' + item.title + '</h4>' +
+                            '<p><i class="fas fa-star"></i> ' + item.rating + '</p>' +
+                            '<button class="btn-add" onclick="event.stopPropagation(); addToWatchlist(' + item.id + ', \'' + item.contentType + '\'); return false;"><i class="fas fa-plus"></i></button>' +
+                        '</div>' +
+                    '</div>' +
+                '</a>';
             }).join('');
+
+            return '<section class="content-row">' +
+                '<div class="row-header"><h2 class="row-title">' + title + '</h2></div>' +
+                '<div class="row-content">' + cardsHTML + '</div>' +
+            '</section>';
         }
 
-        // Chat Functions
-        function toggleChat() {
-            const chat = document.getElementById('chatContainer');
-            chat.classList.toggle('active');
-        }
-
-        function handleChatKeyPress(event) {
-            if (event.key === 'Enter') {
-                sendMessage();
+        function appendRow(title, items) {
+            var container = document.getElementById('dynamic-content');
+            var rowHTML = createRowHTML(title, items);
+            if (rowHTML) {
+                container.innerHTML += rowHTML;
             }
         }
 
+        async function loadPersonalizedHome() {
+            var container = document.getElementById('dynamic-content');
+            container.innerHTML = ''; 
+
+            var nowPlaying = await fetchNowPlayingMovies();
+            setupHeroCarousel(nowPlaying);
+
+            var userGenres = [];
+            try {
+                var profileData = await apiFetch('/api/users/profile');
+                if (profileData.user && profileData.user.preferences && profileData.user.preferences.genres) {
+                    userGenres = profileData.user.preferences.genres;
+                }
+            } catch (error) {
+                console.log('Could not fetch profile, using defaults.');
+            }
+
+            var genreIds = [];
+            userGenres.forEach(function(g) {
+                if (GENRE_MAP[g]) genreIds.push(GENRE_MAP[g]);
+            });
+
+            if (genreIds.length > 0) {
+                var mixedMovies = await fetchMoviesByMultipleGenres(genreIds);
+                appendRow('Recommended For You (Based on your mix)', mixedMovies);
+
+                for (var i = 0; i < Math.min(userGenres.length, 2); i++) {
+                    var genreName = userGenres[i];
+                    var genreId = GENRE_MAP[genreName];
+                    var topMovies = await fetchTopMoviesByGenre(genreId);
+                    appendRow('Top Rated ' + genreName + ' Movies', topMovies);
+                }
+            } else {
+                var trending = await fetchTrendingMovies();
+                appendRow('Trending Now', trending);
+            }
+
+            var trendingBottom = await fetchTrendingMovies();
+            appendRow('Trending This Week', trendingBottom);
+        }
+
+        async function addToWatchlist(contentId, contentType) {
+            var userId = getCurrentUserId();
+            if (!userId) { alert('Please log in to add to watchlist'); return; }
+
+            try {
+                var response = await fetch('http://localhost:5000/api/watchlist', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getAuthToken() },
+                    body: JSON.stringify({ userId: userId, contentId: contentId, contentType: contentType })
+                });
+                var data = await response.json();
+                alert(response.ok ? 'Added to watchlist!' : (data.message || 'Failed to add'));
+            } catch (error) {
+                alert('Error adding to watchlist.');
+            }
+        }
+
+        function goToSearch() {
+            var q = document.getElementById('nav-search-input').value.trim();
+            if (q) window.location.href = 'search.html?q=' + encodeURIComponent(q);
+        }
+
+        function toggleChat() { 
+            document.getElementById('chatContainer').classList.toggle('active'); 
+        }
+        
+        function handleChatKeyPress(e) { 
+            if (e.key === 'Enter') sendMessage(); 
+        }
+        
         function addMessage(text, type) {
-            const messagesDiv = document.getElementById('chatMessages');
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `chat-message ${type}`;
-            msgDiv.innerHTML = text;
-            messagesDiv.appendChild(msgDiv);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            var div = document.createElement('div');
+            div.className = 'chat-message ' + type;
+            div.innerHTML = text;
+            var container = document.getElementById('chatMessages');
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
         }
 
         function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const query = input.value.trim().toLowerCase();
-            
+            var input = document.getElementById('chatInput');
+            var query = input.value.trim();
             if (!query) return;
             
-            // Add user message
             addMessage(query, 'user');
             input.value = '';
             
-            // Process query
-            setTimeout(() => {
-                processQuery(query);
+            setTimeout(function() {
+                processChatQuery(query);
             }, 500);
         }
 
-        function processQuery(query) {
-            // Check for genre keywords
-            let foundGenre = null;
-            for (const genre in movieDatabase) {
-                if (query.includes(genre)) {
-                    foundGenre = genre;
-                    break;
-                }
-            }
+        function getGenreIdFromKeyword(keyword) {
+            var keywordLower = keyword.toLowerCase();
             
-            if (foundGenre) {
-                const movies = movieDatabase[foundGenre];
-                let recommendations = `<strong>Based on your interest in ${foundGenre}, I recommend:</strong><br><br>`;
-                movies.slice(0, 3).forEach(movie => {
-                    recommendations += `<strong>${movie.title}</strong> (${movie.year}) - Rating: ${movie.rating}<br>`;
+            if (keywordLower.indexOf('action') > -1) return 28;
+            if (keywordLower.indexOf('comedy') > -1) return 35;
+            if (keywordLower.indexOf('drama') > -1) return 18;
+            if (keywordLower.indexOf('horror') > -1) return 27;
+            if (keywordLower.indexOf('sci') > -1 || keywordLower.indexOf('science') > -1) return 878;
+            if (keywordLower.indexOf('romance') > -1 || keywordLower.indexOf('love') > -1) return 10749;
+            if (keywordLower.indexOf('thriller') > -1) return 53;
+            if (keywordLower.indexOf('animation') > -1 || keywordLower.indexOf('cartoon') > -1) return 16;
+            
+            return null;
+        }
+        function processChatQuery(query) {
+            var genreId = getGenreIdFromKeyword(query);
+            
+            if (genreId) {
+                addMessage('<i class="fas fa-spinner fa-spin"></i> Finding movies...', 'bot');
+                
+                var url = TMDB_BASE_URL + '/discover/movie?api_key=' + TMDB_API_KEY + 
+                          '&with_genres=' + genreId + 
+                          '&sort_by=popularity.desc&language=en-US';
+                
+                fetch(url).then(function(res) { 
+                    return res.json(); 
+                }).then(function(data) {
+                    var movies = data.results.slice(0, 5);
+                    var loadingMsg = document.querySelector('.chat-message.bot:last-child');
+                    if (loadingMsg && loadingMsg.innerHTML.indexOf('spinner') > -1) {
+                        loadingMsg.remove();
+                    }
+                    
+                    if (movies.length > 0) {
+                        var msg = '<strong>Here are some recommendations:</strong><br><br>';
+                        movies.forEach(function(movie) {
+                            var year = movie.release_date ? movie.release_date.substring(0, 4) : 'N/A';
+                            var rating = movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
+                            msg += '🎬 <strong>' + movie.title + '</strong> (' + year + ') - Rating: ' + rating + '<br>';
+                        });
+                        msg += '<br><em>Click on any movie card on the home page to view details!</em>';
+                        addMessage(msg, 'bot');
+                    } else {
+                        addMessage("I couldn't find any movies for that genre. Try another one!", 'bot');
+                    }
+                }).catch(function(err) {
+                    console.error('Chatbot search error:', err);
+                    addMessage("Sorry, I had trouble finding movies right now.", 'bot');
                 });
-                recommendations += `<br>Click on any movie card on the home page to view details!`;
-                addMessage(recommendations, 'recommendation');
             } else {
-                addMessage("I can help you find movies by genre! Try typing: <em>drama</em>, <em>action</em>, <em>comedy</em>, <em>sci-fi</em>, or <em>romance</em>", 'bot');
+                addMessage("I can help you find movies by genre! Try typing: <em>action</em>, <em>comedy</em>, <em>drama</em>, <em>sci-fi</em>, <em>horror</em>, <em>romance</em>, <em>thriller</em>, or <em>animation</em>", 'bot');
             }
         }
 
-        // Utility functions
-        function addToWatchlist(id) { 
-            alert(`Added ID ${id} to watchlist`); 
-        }
-        
-        function goToSearch() {
-            const q = document.getElementById('nav-search-input').value.trim();
-            if(q) window.location.href = `search.html?q=${encodeURIComponent(q)}`;
-        }
-
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', () => {
-            renderRow('recommendedRow', homeData.recommended);
-            renderRow('becauseRow', homeData.because);
-            renderRow('topMoviesRow', homeData.topMovies);
-            renderRow('trendingRow', homeData.trending);
-
-            // Carousel
-            const slides = document.querySelectorAll('.hero-slide');
-            const indicators = document.querySelectorAll('.indicator');
-            let current = 0;
-            function go(idx) {
-                slides.forEach(s => s.classList.remove('active'));
-                indicators.forEach(i => i.classList.remove('active'));
-                slides[idx].classList.add('active');
-                indicators[idx].classList.add('active');
-                current = idx;
-            }
-            document.querySelector('.hero-prev').onclick = () => go((current - 1 + slides.length) % slides.length);
-            document.querySelector('.hero-next').onclick = () => go((current + 1) % slides.length);
-            indicators.forEach((ind, i) => ind.onclick = () => go(i));
-            setInterval(() => go((current + 1) % slides.length), 8000);
+        document.addEventListener('DOMContentLoaded', function() {
+            updateNavAvatar();
+            loadPersonalizedHome();
         });
     </script>
 </body>
