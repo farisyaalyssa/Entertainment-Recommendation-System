@@ -1,221 +1,214 @@
-// ── DATA ──────────────────────────────────────
-// tmdbId is used to navigate to content-detail.html
-const data = [
-  {
-    id: 1,
-    tmdbId: 557,
-    type: "Movie",
-    title: "Spider-Man: Homecoming",
-    genre: "Action",
-    rating: 8,
-    poster: "https://upload.wikimedia.org/wikipedia/en/f/f9/Spider-Man_Homecoming_poster.jpg"
-  },
-  {
-    id: 2,
-    tmdbId: 11036,
-    type: "Movie",
-    title: "The Notebook",
-    genre: "Romance",
-    rating: 7,
-    poster: "https://upload.wikimedia.org/wikipedia/en/8/86/Posternotebook.jpg"
-  },
-  {
-    id: 3,
-    tmdbId: 1668,
-    type: "TV Show",
-    title: "Friends",
-    genre: "Comedy",
-    rating: 9,
-    poster: "https://upload.wikimedia.org/wikipedia/en/d/d6/Friends_season_one_cast.jpg"
-  },
-  {
-    id: 4,
-    tmdbId: 27205,
-    type: "Movie",
-    title: "Inception",
-    genre: "Sci-Fi",
-    rating: 9,
-    poster: "https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg"
-  },
-  {
-    id: 5,
-    tmdbId: 157336,
-    type: "Movie",
-    title: "Interstellar",
-    genre: "Sci-Fi",
-    rating: 9,
-    poster: "https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg"
-  },
-  {
-    id: 6,
-    tmdbId: 155,
-    type: "Movie",
-    title: "The Dark Knight",
-    genre: "Action",
-    rating: 9,
-    poster: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg"
-  },
-  {
-    id: 7,
-    tmdbId: 438631,
-    type: "Movie",
-    title: "Dune",
-    genre: "Sci-Fi",
-    rating: 8,
-    poster: "https://image.tmdb.org/t/p/w500/d5NXSklpcvkC173QCnEh3w0VBgX.jpg"
-  }
-];
+var currentPage = 1;
+var totalPages = 1;
 
-// ── SEARCH FUNCTION ────────────────────────────
-function search() {
-  const text = document.getElementById("searchInput").value.toLowerCase();
-  const type = document.getElementById("type").value;
-  const genre = document.getElementById("genre").value;
-  const rating = document.getElementById("rating").value;
-
-  const filtered = data.filter(item =>
-    item.title.toLowerCase().includes(text) &&
-    (type === "" || item.type === type) &&
-    (genre === "" || item.genre === genre) &&
-    (rating === "" || item.rating >= Number(rating))
-  );
-
-  // show results count
-  const meta = document.getElementById("results-meta");
-  if (text || type || genre || rating) {
-    meta.textContent = filtered.length + " result" + (filtered.length !== 1 ? "s" : "") + " found";
-  } else {
-    meta.textContent = "";
-  }
-
-  display(filtered);
+function escapeHtml(text) {
+  var div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
 }
 
-// ── CLEAR FILTERS ──────────────────────────────
-function clearFilters() {
-  document.getElementById("searchInput").value = "";
-  document.getElementById("type").value = "";
-  document.getElementById("genre").value = "";
-  document.getElementById("rating").value = "";
-  document.getElementById("results-meta").textContent = "";
-  display(data);
+function getDisplayType(mediaType) {
+  return mediaType === 'tv' ? 'TV Show' : 'Movie';
 }
 
-// ── DISPLAY RESULTS ────────────────────────────
+function getFilterValues() {
+  return {
+    query: document.getElementById('searchInput').value.trim(),
+    type: document.getElementById('type').value,
+    genre: document.getElementById('genre').value,
+    rating: document.getElementById('rating').value
+  };
+}
+
+function buildSearchUrl(page) {
+  var filters = getFilterValues();
+  var params = ['page=' + page];
+
+  if (filters.query) params.push('q=' + encodeURIComponent(filters.query));
+  if (filters.type) params.push('type=' + encodeURIComponent(filters.type));
+  if (filters.genre) params.push('genre=' + encodeURIComponent(filters.genre));
+  if (filters.rating) params.push('rating=' + encodeURIComponent(filters.rating));
+
+  return '/api/search?' + params.join('&');
+}
+
+function updateResultsMeta(data) {
+  var meta = document.getElementById('results-meta');
+  var filters = getFilterValues();
+  var label = filters.query
+    ? 'results for "' + filters.query + '"'
+    : 'popular titles';
+
+  meta.textContent =
+    data.totalResults + ' ' + label +
+    ' · page ' + data.page + ' of ' + data.totalPages;
+}
+
+function showLoadingState() {
+  document.getElementById('results').innerHTML = '<p class="no-results">Loading...</p>';
+  document.getElementById('pagination').innerHTML = '';
+}
+
+function showEmptyState(message) {
+  document.getElementById('results-meta').textContent = '';
+  document.getElementById('results').innerHTML =
+    '<p class="no-results">' + (message || 'No results found.') + '</p>';
+  document.getElementById('pagination').innerHTML = '';
+}
+
 function display(list) {
-  const results = document.getElementById("results");
-  results.innerHTML = "";
+  var results = document.getElementById('results');
+  results.innerHTML = '';
 
-  if (list.length === 0) {
-    results.innerHTML = '<p class="no-results">No results found. Try a different search.</p>';
+  if (!list.length) {
+    showEmptyState('No results found. Try a different search or filter.');
     return;
   }
 
-  list.forEach(item => {
-    const avg = getAverage(item.id);
+  list.forEach(function(item) {
+    var contentType = item.mediaType === 'tv' ? 'tv' : 'movie';
+    var displayType = getDisplayType(item.mediaType);
+    var poster = item.poster || 'https://via.placeholder.com/200x300/1a2d47/F63049?text=No+Poster';
+    var ratingText = item.rating ? item.rating.toFixed(1) : 'N/A';
+    var detailUrl = 'content-detail.html?id=' + item.tmdbId + '&type=' + contentType;
 
-    // determine content type for TMDB URL
-    const contentType = item.type === "TV Show" ? "tv" : "movie";
+    var div = document.createElement('div');
+    div.className = 'card search-card';
 
-    const div = document.createElement("div");
-    div.className = "card search-card";
-
-    div.innerHTML = `
-      <img
-        class="poster"
-        src="${item.poster}"
-        alt="${item.title}"
-        onclick="window.location.href='content-detail.html?id=${item.tmdbId}&type=${contentType}'"
-        style="cursor:pointer;"
-      >
-      <div class="card-content">
-        <div class="search-card-header">
-          <div>
-            <h3 onclick="window.location.href='content-detail.html?id=${item.tmdbId}&type=${contentType}'" style="cursor:pointer;">${item.title}</h3>
-            <span class="search-type-tag">${item.type}</span>
-          </div>
-          <span class="search-rating-badge">★ ${item.rating}</span>
-        </div>
-
-        <p class="search-genre">${item.genre}</p>
-        <p><strong style="color:#aaa; font-size:12px;">Avg User Rating:</strong> <span style="color:#F63049; font-size:12px;">${avg}</span></p>
-
-        <!-- Rate -->
-        <div class="search-actions">
-          <select id="rate-${item.id}">
-  <option value="10">10★</option>
-  <option value="9">9★</option>
-  <option value="8">8★</option>
-  <option value="7">7★</option>
-  <option value="6">6★</option>
-  <option value="5">5★</option>
-  <option value="4">4★</option>
-  <option value="3">3★</option>
-  <option value="2">2★</option>
-  <option value="1">1★</option>
-</select>
-          <button onclick="addRating(${item.id})">Rate</button>
-          <button class="btn-details" onclick="window.location.href='content-detail.html?id=${item.tmdbId}&type=${contentType}'">View Details</button>
-        </div>
-
-        <!-- Review -->
-        <textarea id="review-${item.id}" placeholder="Write your review..."></textarea>
-        <button onclick="addReview(${item.id})">Submit Review</button>
-
-        <!-- Existing reviews -->
-        <div class="existing-reviews">
-          ${getReviews(item.id).map(r => `<p class="existing-review">${r}</p>`).join("")}
-        </div>
-      </div>
-    `;
+    div.innerHTML =
+      '<img class="poster" src="' + poster + '" alt="' + escapeHtml(item.title) + '" ' +
+      'onclick="window.location.href=\'' + detailUrl + '\'" style="cursor:pointer;">' +
+      '<div class="card-content">' +
+      '<div class="search-card-header">' +
+      '<div>' +
+      '<h3 onclick="window.location.href=\'' + detailUrl + '\'" style="cursor:pointer;">' + escapeHtml(item.title) + '</h3>' +
+      '<span class="search-type-tag">' + displayType + '</span>' +
+      '</div>' +
+      '<span class="search-rating-badge">★ ' + ratingText + '</span>' +
+      '</div>' +
+      (item.genre ? '<p class="search-genre">' + escapeHtml(item.genre) + '</p>' : '') +
+      (item.releaseDate ? '<p class="search-release">' + escapeHtml(item.releaseDate) + '</p>' : '') +
+      (item.overview ? '<p class="search-overview">' + escapeHtml(item.overview.substring(0, 160)) + (item.overview.length > 160 ? '...' : '') + '</p>' : '') +
+      '<div class="search-actions">' +
+      '<button class="btn-details" onclick="window.location.href=\'' + detailUrl + '\'">View Details</button>' +
+      '</div>' +
+      '</div>';
 
     results.appendChild(div);
   });
 }
 
-// ── ADD RATING ─────────────────────────────────
-function addRating(id) {
-  const val = Number(document.getElementById(`rate-${id}`).value);
-  let ratings = JSON.parse(localStorage.getItem(`ratings-${id}`)) || [];
-  ratings.push(val);
-  localStorage.setItem(`ratings-${id}`, JSON.stringify(ratings));
-  search();
+function renderPagination(page, pages) {
+  var container = document.getElementById('pagination');
+  container.innerHTML = '';
+
+  if (pages <= 1) return;
+
+  var prevBtn = document.createElement('button');
+  prevBtn.className = 'page-btn';
+  prevBtn.textContent = 'Previous';
+  prevBtn.disabled = page <= 1;
+  prevBtn.onclick = function() {
+    fetchResults(page - 1);
+  };
+
+  var info = document.createElement('span');
+  info.className = 'page-info';
+  info.textContent = 'Page ' + page + ' of ' + pages;
+
+  var nextBtn = document.createElement('button');
+  nextBtn.className = 'page-btn';
+  nextBtn.textContent = 'Next';
+  nextBtn.disabled = page >= pages;
+  nextBtn.onclick = function() {
+    fetchResults(page + 1);
+  };
+
+  container.appendChild(prevBtn);
+  container.appendChild(info);
+  container.appendChild(nextBtn);
 }
 
-// ── GET AVERAGE RATING ─────────────────────────
-function getAverage(id) {
-  let ratings = JSON.parse(localStorage.getItem(`ratings-${id}`)) || [];
-  if (ratings.length === 0) return "No ratings yet";
-  let avg = ratings.reduce((a, b) => a + b, 0) / ratings.length;
-  return avg.toFixed(1) + " / 5";
+function fetchResults(page) {
+  currentPage = page || 1;
+  showLoadingState();
+
+  apiPublic(buildSearchUrl(currentPage))
+    .then(function(data) {
+      totalPages = data.totalPages || 1;
+      currentPage = data.page || currentPage;
+      updateResultsMeta(data);
+      display(data.results || []);
+      renderPagination(currentPage, totalPages);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    })
+    .catch(function(err) {
+      showEmptyState(err.message || 'Search failed. Make sure the backend is running.');
+    });
 }
 
-// ── ADD REVIEW ─────────────────────────────────
-function addReview(id) {
-  const text = document.getElementById(`review-${id}`).value;
-  if (!text) {
-    alert("Write something first");
-    return;
+function search() {
+  fetchResults(1);
+}
+
+function clearFilters() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('type').value = '';
+  document.getElementById('genre').value = '';
+  document.getElementById('rating').value = '';
+  fetchResults(1);
+}
+
+function loadGenres() {
+  apiPublic('/api/search/genres')
+    .then(function(data) {
+      var select = document.getElementById('genre');
+      var current = select.value;
+
+      select.innerHTML = '<option value="">All Genres</option>';
+
+      (data.genres || []).forEach(function(genre) {
+        var option = document.createElement('option');
+        option.value = genre.name;
+        option.textContent = genre.name;
+        select.appendChild(option);
+      });
+
+      if (current) select.value = current;
+    })
+    .catch(function(err) {
+      console.error('Failed to load genres:', err.message);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  loadGenres();
+
+  var searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        search();
+      }
+    });
   }
-  let reviews = JSON.parse(localStorage.getItem(`reviews-${id}`)) || [];
-  reviews.push(text);
-  localStorage.setItem(`reviews-${id}`, JSON.stringify(reviews));
-  search();
-}
 
-// ── GET REVIEWS ────────────────────────────────
-function getReviews(id) {
-  return JSON.parse(localStorage.getItem(`reviews-${id}`)) || [];
-}
+  ['type', 'genre', 'rating'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('change', function() {
+        fetchResults(1);
+      });
+    }
+  });
 
-// ── ON PAGE LOAD ───────────────────────────────
-window.onload = function() {
-  const params = new URLSearchParams(window.location.search);
-  const query = params.get('q');
+  var params = new URLSearchParams(window.location.search);
+  var query = params.get('q');
+
   if (query) {
     document.getElementById('searchInput').value = query;
-    search();
-  } else {
-    display(data);
   }
-}
+
+  fetchResults(1);
+});

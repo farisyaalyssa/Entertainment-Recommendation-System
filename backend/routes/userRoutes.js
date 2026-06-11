@@ -63,9 +63,17 @@ router.put('/profile', validateUpdateProfile, async (req, res) => {
 router.put('/password', validateChangePassword, async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
-    const user = await User.findById(req.user._id).select('+password');
+    const user = await User.findOne({ _id: req.user._id }).select('+password');
 
-    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (!user.password) {
+      return res.status(500).json({ message: 'Could not verify current password' });
+    }
+
+    const isMatch = await user.matchPassword(currentPassword);
     if (!isMatch) {
       return res.status(401).json({ message: 'Current password is incorrect' });
     }

@@ -28,7 +28,7 @@
         <h2 class="search-hero-title">Find your next watch</h2>
         <p class="search-hero-sub">Search across movies and TV shows</p>
         <div class="search-bar-wrap">
-            <input type="text" id="searchInput" placeholder="Search movies or TV shows..." onkeydown="if(event.key==='Enter') search()">
+            <input type="text" id="searchInput" placeholder="Search movies or TV shows...">
             <button onclick="search()">Search</button>
         </div>
     </div>
@@ -42,12 +42,6 @@
         </select>
         <select id="genre">
             <option value="">All Genres</option>
-            <option value="Action">Action</option>
-            <option value="Romance">Romance</option>
-            <option value="Comedy">Comedy</option>
-            <option value="Drama">Drama</option>
-            <option value="Sci-Fi">Sci-Fi</option>
-            <option value="Thriller">Thriller</option>
         </select>
         <select id="rating">
             <option value="">Any Rating</option>
@@ -64,6 +58,9 @@
 
     <!-- RESULTS -->
     <section id="results"></section>
+
+    <!-- PAGINATION -->
+    <div id="pagination" class="search-pagination"></div>
 
     <script src="../js/api.js"></script>
     <script src="../js/search.js"></script>

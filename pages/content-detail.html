@@ -335,6 +335,15 @@
             });
         }
 
+        function resetReviewForm() {
+            currentRating = 0;
+            document.querySelectorAll('.star').forEach(function(star) {
+                star.classList.remove('star-filled');
+            });
+            document.getElementById('rating-feedback').textContent = '';
+            document.getElementById('review-input').value = '';
+        }
+
         function updateRatingUI(val) {
             currentRating = val;
             var stars = document.querySelectorAll('.star');
@@ -378,9 +387,10 @@
                         rating: currentRating,
                         review: text
                     })
-                }).then(function() {
-                    document.getElementById('review-input').value = '';
-                    loadReviews();
+                }).then(function(data) {
+                    if (data.review && data.review.id) userReviewId = data.review.id;
+                    resetReviewForm();
+                    loadReviews(false);
                 }).catch(function(err) {
                     alert(err.message);
                 });
@@ -393,16 +403,18 @@
                         rating: currentRating,
                         review: text
                     })
-                }).then(function() {
-                    document.getElementById('review-input').value = '';
-                    loadReviews();
+                }).then(function(data) {
+                    if (data.review && data.review.id) userReviewId = data.review.id;
+                    resetReviewForm();
+                    loadReviews(false);
                 }).catch(function(err) {
                     alert(err.message);
                 });
             }
         }
 
-        function loadReviews() {
+        function loadReviews(preFillForm) {
+            if (preFillForm === undefined) preFillForm = true;
             if (!contentId || !getAuthToken()) {
                 document.getElementById('reviews-list').innerHTML = '';
                 return;
@@ -418,8 +430,10 @@
                     reviews.forEach(function(review) {
                         if (currentUserId && String(review.userId) === String(currentUserId)) {
                             userReviewId = review.id;
-                            updateRatingUI(review.rating);
-                            document.getElementById('review-input').value = review.review;
+                            if (preFillForm) {
+                                updateRatingUI(review.rating);
+                                document.getElementById('review-input').value = review.review;
+                            }
                         }
                     });
 

@@ -1,4 +1,4 @@
-var API_BASE = 'http://localhost:5000';
+var API_BASE = 'http://localhost:3000';
 
 function getAuthToken() {
     var token = localStorage.getItem('watchly_token');
@@ -27,6 +27,19 @@ function saveSession(user, token, remember) {
 
     localStorage.setItem('watchly_token', token);
     localStorage.setItem('watchly_session', JSON.stringify({ user: user, token: token, expires: expires }));
+}
+
+function updateSessionUser(user) {
+    try {
+        var session = JSON.parse(localStorage.getItem('watchly_session') || '{}');
+        if (!session.user) return;
+
+        session.user = user;
+        localStorage.setItem('watchly_session', JSON.stringify(session));
+        updateNavAvatar();
+    } catch (e) {
+        console.error('Session update error:', e);
+    }
 }
 
 function clearSession() {
@@ -74,9 +87,32 @@ function setupUserMenu() {
     });
 }
 
+function goToSearch() {
+    var input = document.getElementById('nav-search-input');
+    if (!input) return;
+
+    var query = input.value.trim();
+    if (query) {
+        window.location.href = 'search.html?q=' + encodeURIComponent(query);
+    }
+}
+
+function setupNavSearch() {
+    var input = document.getElementById('nav-search-input');
+    if (!input) return;
+
+    input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            goToSearch();
+        }
+    });
+}
+
 function initNav() {
     updateNavAvatar();
     setupUserMenu();
+    setupNavSearch();
 }
 
 function updateNavAvatar() {
@@ -127,16 +163,28 @@ function formatApiError(data) {
 }
 
 function handleResponse(res) {
-    return res.json().then(function(data) {
+    return res.text().then(function(text) {
+        var data = {};
+
+        if (text) {
+            try {
+                data = JSON.parse(text);
+            } catch (e) {
+                if (!res.ok) {
+                    if (res.status === 413) {
+                        throw new Error('Upload is too large. Try a smaller profile photo.');
+                    }
+                    throw new Error(text || 'Request failed with status ' + res.status);
+                }
+                throw new Error('Invalid response from server');
+            }
+        }
+
         if (!res.ok) {
             throw new Error(formatApiError(data));
         }
+
         return data;
-    }).catch(function(err) {
-        if (err instanceof SyntaxError) {
-            throw new Error('Cannot reach the server. Make sure the backend is running (cd backend && npm run dev).');
-        }
-        throw err;
     });
 }
 
