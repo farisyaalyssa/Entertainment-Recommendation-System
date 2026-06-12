@@ -1,4 +1,4 @@
-var API_BASE = 'http://localhost:3000';
+var API_BASE = 'http://localhost:5000';
 
 function getAuthToken() {
     var token = localStorage.getItem('watchly_token');
