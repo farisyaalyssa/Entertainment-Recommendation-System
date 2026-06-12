@@ -1,7 +1,7 @@
 const express = require('express');
 const History = require('../models/History');
 const protect = require('../middleware/auth');
-const { validateAddHistoryItem } = require('../middleware/validateHistory');
+const { validateAddHistoryItem, validateRemoveHistoryItem } = require('../middleware/validateHistory');
 
 const router = express.Router();
 
@@ -68,6 +68,30 @@ router.delete('/', async (req, res) => {
   } catch (error) {
     console.error('Clear history error:', error.message);
     res.status(500).json({ message: 'Server error clearing watch history' });
+  }
+});
+
+router.delete('/:tmdbId', validateRemoveHistoryItem, async (req, res) => {
+  try {
+    const { tmdbId, type } = req.historyQuery;
+
+    const item = await History.findOneAndDelete({
+      userId: req.user._id,
+      tmdbId,
+      type,
+    });
+
+    if (!item) {
+      return res.status(404).json({ message: 'History item not found' });
+    }
+
+    res.json({
+      message: 'Item removed from watch history',
+      item: formatHistoryItem(item),
+    });
+  } catch (error) {
+    console.error('Remove history item error:', error.message);
+    res.status(500).json({ message: 'Server error removing watch history item' });
   }
 });
 

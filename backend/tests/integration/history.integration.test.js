@@ -34,4 +34,25 @@ describe('History API integration', () => {
 
     expect(afterClear.body.count).toBe(0);
   });
+
+  it('removes a single item from watch history', async () => {
+    const { token } = await createTestUser();
+
+    await request(app)
+      .post('/api/history')
+      .set(authHeader(token))
+      .send(sampleContent);
+
+    const removeRes = await request(app)
+      .delete(`/api/history/${sampleContent.tmdbId}?type=${sampleContent.type}`)
+      .set(authHeader(token));
+
+    expect(removeRes.statusCode).toBe(200);
+
+    const listRes = await request(app)
+      .get('/api/history')
+      .set(authHeader(token));
+
+    expect(listRes.body.count).toBe(0);
+  });
 });

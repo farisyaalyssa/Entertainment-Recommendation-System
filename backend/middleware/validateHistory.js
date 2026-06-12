@@ -29,4 +29,25 @@ const validateAddHistoryItem = (req, res, next) => {
   next();
 };
 
-module.exports = { validateAddHistoryItem };
+const validateRemoveHistoryItem = (req, res, next) => {
+  const errors = [];
+  const tmdbId = Number(req.params.tmdbId);
+  const { type } = req.query;
+
+  if (Number.isNaN(tmdbId)) {
+    errors.push({ field: 'tmdbId', message: 'A valid TMDB ID is required' });
+  }
+
+  if (!type || !['movie', 'tv'].includes(type)) {
+    errors.push({ field: 'type', message: 'Query parameter type must be either "movie" or "tv"' });
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).json({ message: 'Validation failed', errors });
+  }
+
+  req.historyQuery = { tmdbId, type };
+  next();
+};
+
+module.exports = { validateAddHistoryItem, validateRemoveHistoryItem };

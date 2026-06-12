@@ -327,24 +327,30 @@
             if (!contentData) return;
 
             if (isWatched) {
-                alert('This title is already in your watch history.');
-                return;
+                apiFetch('/api/history/' + contentData.tmdbId + '?type=' + contentType, {
+                    method: 'DELETE'
+                }).then(function() {
+                    isWatched = false;
+                    updateWatchedBtn();
+                }).catch(function(err) {
+                    alert(err.message);
+                });
+            } else {
+                apiFetch('/api/history', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        tmdbId: contentData.tmdbId,
+                        type: contentData.type,
+                        title: contentData.title,
+                        poster: contentData.poster
+                    })
+                }).then(function() {
+                    isWatched = true;
+                    updateWatchedBtn();
+                }).catch(function(err) {
+                    alert(err.message);
+                });
             }
-
-            apiFetch('/api/history', {
-                method: 'POST',
-                body: JSON.stringify({
-                    tmdbId: contentData.tmdbId,
-                    type: contentData.type,
-                    title: contentData.title,
-                    poster: contentData.poster
-                })
-            }).then(function() {
-                isWatched = true;
-                updateWatchedBtn();
-            }).catch(function(err) {
-                alert(err.message);
-            });
         }
 
         function isCurrentUserReview(review, currentUserId) {
