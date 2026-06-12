@@ -122,6 +122,23 @@ router.put('/preferences', validateUpdatePreferences, async (req, res) => {
   }
 });
 
+router.get('/onboarding-status', protect, async (req, res) => {
+  try {
+    const user = req.user;
+    const hasCompletedOnboarding = user.preferences && 
+                                    user.preferences.genres && 
+                                    user.preferences.genres.length >= 3;
+    
+    res.json({
+      completed: hasCompletedOnboarding,
+      genresSelected: user.preferences.genres || []
+    });
+  } catch (error) {
+    console.error('Onboarding status error:', error.message);
+    res.status(500).json({ message: 'Server error checking onboarding status' });
+  }
+});
+
 router.delete('/account', validateDeleteAccount, async (req, res) => {
   try {
     const { action } = req.body;
