@@ -258,7 +258,7 @@
             if (!userId) { alert('Please log in to add to watchlist'); return; }
 
             try {
-                var response = await fetch('http://localhost:5000/api/watchlist', {
+                var response = await fetch('http://localhost:3000/api/watchlist', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + getAuthToken() },
                     body: JSON.stringify({ userId: userId, contentId: contentId, contentType: contentType })

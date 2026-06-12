@@ -712,6 +712,107 @@ select:focus {
     border: 1px solid #1e3050;
 }
 
+.review-card--mine {
+    border-color: #2a4060;
+    background-color: #152a42;
+}
+
+.review-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.review-author {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.review-username {
+    color: #888888;
+    font-weight: 500;
+}
+
+.review-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+
+.review-section-header .detail-section-title {
+    margin-bottom: 0;
+}
+
+.btn-write-review {
+    background-color: transparent;
+    border: 1px solid #F63049;
+    border-radius: 8px;
+    color: #F63049;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-write-review:hover {
+    background-color: #F63049;
+    color: #ffffff;
+}
+
+.review-form-panel {
+    background-color: #142238;
+    border: 1px solid #1e3050;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 16px;
+}
+
+.review-form-panel .detail-section-title {
+    margin-bottom: 12px;
+}
+
+.review-form-panel .star-rating {
+    margin-bottom: 4px;
+}
+
+.review-form-panel .review-input {
+    margin-top: 12px;
+}
+
+.review-form-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.reviews-empty {
+    color: #888888;
+    font-size: 14px;
+    font-style: italic;
+    margin: 8px 0 0;
+    padding: 16px;
+    background-color: #142238;
+    border: 1px dashed #1e3050;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.review-hint {
+    font-size: 13px;
+    margin-bottom: 12px;
+    color: #888888;
+}
+
 .review-title {
     color: #ffffff;
     font-size: 15px;
@@ -721,12 +822,14 @@ select:focus {
 
 .review-rating {
     color: #F63049;
-    font-size: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 .review-text {
-    color: #aaaaaa;
-    font-size: 13px;
+    color: #cccccc;
+    font-size: 14px;
     margin: 0;
     line-height: 1.6;
 }
@@ -734,8 +837,31 @@ select:focus {
 .review-actions {
     display: flex;
     align-items: center;
-    gap: 16px;
-    margin-top: 10px;
+    gap: 12px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #1e3050;
+}
+
+.btn-review-action {
+    background: none;
+    border: none;
+    color: #aaaaaa;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: color 0.15s;
+}
+
+.btn-review-action:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.btn-review-action--danger:hover {
+    color: #ff6b6b;
 }
 
 .review-actions a {

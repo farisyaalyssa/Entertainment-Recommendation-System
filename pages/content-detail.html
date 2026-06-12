@@ -69,38 +69,47 @@
 
                 <hr class="profile-divider">
 
-                <!-- RATE -->
-<div class="detail-section">
-    <p class="detail-section-title">Rate this</p>
-    <div class="star-rating" id="star-rating">
-        <span class="star" onclick="setRating(1)">★</span>
-        <span class="star" onclick="setRating(2)">★</span>
-        <span class="star" onclick="setRating(3)">★</span>
-        <span class="star" onclick="setRating(4)">★</span>
-        <span class="star" onclick="setRating(5)">★</span>
-        <span class="star" onclick="setRating(6)">★</span>
-        <span class="star" onclick="setRating(7)">★</span>
-        <span class="star" onclick="setRating(8)">★</span>
-        <span class="star" onclick="setRating(9)">★</span>
-        <span class="star" onclick="setRating(10)">★</span>
-    </div>
-    <p class="rating-feedback" id="rating-feedback"></p>
-</div>
-
-                <hr class="profile-divider">
-
-                <!-- WRITE A REVIEW -->
+                <!-- REVIEWS -->
                 <div class="detail-section">
-                    <p class="detail-section-title">Write a Review</p>
-                    <textarea
-                        class="form-input review-input"
-                        id="review-input"
-                        placeholder="Share your thoughts about this movie or show..."
-                    ></textarea>
-                    <button class="btn-save mt-2" onclick="submitReview()">Submit Review</button>
+                    <div class="review-section-header">
+                        <p class="detail-section-title">Reviews</p>
+                        <button type="button" class="btn-write-review" id="write-review-btn" style="display:none;" onclick="openReviewForm()">
+                            Write a Review
+                        </button>
+                    </div>
 
-                    <!-- Submitted reviews -->
                     <div id="reviews-list" class="mt-3"></div>
+
+                    <div id="review-form-panel" class="review-form-panel mt-3" style="display:none;">
+                        <p class="detail-section-title" id="review-section-title">Write a Review</p>
+                        <p class="review-hint text-muted" id="review-hint" style="display:none;">
+                            Editing one of your reviews. Save changes or cancel when you are done.
+                        </p>
+
+                        <div class="star-rating" id="star-rating">
+                            <span class="star" onclick="setRating(1)">★</span>
+                            <span class="star" onclick="setRating(2)">★</span>
+                            <span class="star" onclick="setRating(3)">★</span>
+                            <span class="star" onclick="setRating(4)">★</span>
+                            <span class="star" onclick="setRating(5)">★</span>
+                            <span class="star" onclick="setRating(6)">★</span>
+                            <span class="star" onclick="setRating(7)">★</span>
+                            <span class="star" onclick="setRating(8)">★</span>
+                            <span class="star" onclick="setRating(9)">★</span>
+                            <span class="star" onclick="setRating(10)">★</span>
+                        </div>
+                        <p class="rating-feedback" id="rating-feedback"></p>
+
+                        <textarea
+                            class="form-input review-input"
+                            id="review-input"
+                            placeholder="Share your thoughts about this movie or show..."
+                        ></textarea>
+                        <div class="review-form-actions">
+                            <button type="button" class="btn-save" id="review-submit-btn" onclick="submitReview()">Submit Review</button>
+                            <button type="button" class="btn-cancel" id="review-cancel-btn" onclick="closeReviewForm()">Cancel</button>
+                        </div>
+                    </div>
                 </div>
 
             </div>
@@ -111,10 +120,6 @@
     <script src="../js/api.js"></script>
     <script>
 
-        var API_KEY = '9702460f55f5b08f0ad2c93b27dcebf3';
-        var BASE_URL = 'https://api.themoviedb.org/3';
-        var IMG_URL = 'https://image.tmdb.org/t/p/';
-
         var params = new URLSearchParams(window.location.search);
         var contentId = params.get('id');
         var contentType = params.get('type') || 'movie';
@@ -122,6 +127,8 @@
         var contentData = null;
         var currentRating = 0;
         var userReviewId = null;
+        var loadedReviews = [];
+        var reviewFormOpen = false;
         var inWatchlist = false;
         var inFavourites = false;
         var isWatched = false;
@@ -138,22 +145,27 @@
                 return;
             }
 
-            fetch(BASE_URL + '/' + contentType + '/' + contentId + '?api_key=' + API_KEY)
-                .then(function(res) { return res.json(); })
-                .then(function(data) { renderContent(data); })
-                .catch(function() {
-                    document.querySelector('.detail-content').innerHTML = '<p class="text-center mt-5">Failed to load content. Check your API key.</p>';
+            apiPublic('/api/content/' + contentType + '/' + contentId)
+                .then(function(data) {
+                    if (!data.content) {
+                        throw new Error('Content not found.');
+                    }
+                    renderContent(data.content);
+                })
+                .catch(function(err) {
+                    document.querySelector('.detail-content').innerHTML =
+                        '<p class="text-center mt-5">Failed to load content. ' + escapeHtml(err.message) + '</p>';
                 });
         };
 
         function renderContent(data) {
-            var title = data.title || data.name;
-            var year = (data.release_date || data.first_air_date || '').substring(0, 4);
-            var rating = data.vote_average ? data.vote_average.toFixed(1) : 'N/A';
-            var runtime = data.runtime ? data.runtime + ' min' : (data.episode_run_time ? data.episode_run_time[0] + ' min/ep' : '');
+            var title = data.title;
+            var year = data.year || '';
+            var rating = data.rating !== null && data.rating !== undefined ? data.rating : 'N/A';
+            var runtime = data.runtime || '';
             var overview = data.overview || 'No description available.';
-            var poster = data.poster_path ? IMG_URL + 'w500' + data.poster_path : '';
-            var backdrop = data.backdrop_path ? IMG_URL + 'original' + data.backdrop_path : '';
+            var poster = data.poster || '';
+            var backdrop = data.backdrop || '';
             var genres = data.genres || [];
 
             contentData = {
@@ -177,8 +189,8 @@
                 '<span class="meta-tag">★ ' + rating + '</span>' +
                 (runtime ? '<span class="meta-tag">' + runtime + '</span>' : '');
 
-            document.getElementById('detail-genres').innerHTML = genres.map(function(g) {
-                return '<span class="genre-tag">' + g.name + '</span>';
+            document.getElementById('detail-genres').innerHTML = genres.map(function(name) {
+                return '<span class="genre-tag">' + escapeHtml(name) + '</span>';
             }).join('');
 
             document.getElementById('detail-overview').textContent = overview;
@@ -335,7 +347,84 @@
             });
         }
 
-        function resetReviewForm() {
+        function isCurrentUserReview(review, currentUserId) {
+            if (!currentUserId || !review) return false;
+
+            var reviewUserId = review.userId;
+            if (reviewUserId && typeof reviewUserId === 'object') {
+                reviewUserId = reviewUserId._id || reviewUserId.id;
+            }
+
+            return String(reviewUserId) === String(currentUserId);
+        }
+
+        function updateReviewFormUI() {
+            var editing = Boolean(userReviewId);
+            document.getElementById('review-section-title').textContent = editing ? 'Edit Review' : 'Write a Review';
+            document.getElementById('review-submit-btn').textContent = editing ? 'Save Changes' : 'Submit Review';
+            document.getElementById('review-hint').style.display = editing ? 'block' : 'none';
+            document.getElementById('review-form-panel').style.display = reviewFormOpen ? 'block' : 'none';
+            document.getElementById('write-review-btn').style.display =
+                getAuthToken() && !reviewFormOpen ? 'inline-block' : 'none';
+        }
+
+        function userHasReviews(currentUserId) {
+            return loadedReviews.some(function(review) {
+                return isCurrentUserReview(review, currentUserId);
+            });
+        }
+
+        function updateWriteReviewButton(currentUserId) {
+            var button = document.getElementById('write-review-btn');
+            button.textContent = userHasReviews(currentUserId) ? 'Add Another Review' : 'Write a Review';
+        }
+
+        function openReviewForm() {
+            userReviewId = null;
+            reviewFormOpen = true;
+            resetReviewFormFields();
+            updateReviewFormUI();
+            document.getElementById('review-input').focus();
+        }
+
+        function closeReviewForm() {
+            userReviewId = null;
+            reviewFormOpen = false;
+            resetReviewFormFields();
+            updateReviewFormUI();
+        }
+
+        function editReview(reviewId) {
+            var review = loadedReviews.find(function(item) {
+                return String(item.id) === String(reviewId);
+            });
+
+            if (!review) return;
+
+            userReviewId = review.id;
+            reviewFormOpen = true;
+            updateRatingUI(review.rating);
+            document.getElementById('review-input').value = review.review;
+            updateReviewFormUI();
+            document.getElementById('review-input').focus();
+        }
+
+        function deleteReview(reviewId) {
+            if (!confirm('Delete this review?')) return;
+
+            apiFetch('/api/reviews/' + reviewId, {
+                method: 'DELETE'
+            }).then(function() {
+                if (String(userReviewId) === String(reviewId)) {
+                    closeReviewForm();
+                }
+                loadReviews();
+            }).catch(function(err) {
+                alert(err.message);
+            });
+        }
+
+        function resetReviewFormFields() {
             currentRating = 0;
             document.querySelectorAll('.star').forEach(function(star) {
                 star.classList.remove('star-filled');
@@ -387,10 +476,9 @@
                         rating: currentRating,
                         review: text
                     })
-                }).then(function(data) {
-                    if (data.review && data.review.id) userReviewId = data.review.id;
-                    resetReviewForm();
-                    loadReviews(false);
+                }).then(function() {
+                    closeReviewForm();
+                    loadReviews();
                 }).catch(function(err) {
                     alert(err.message);
                 });
@@ -403,20 +491,20 @@
                         rating: currentRating,
                         review: text
                     })
-                }).then(function(data) {
-                    if (data.review && data.review.id) userReviewId = data.review.id;
-                    resetReviewForm();
-                    loadReviews(false);
+                }).then(function() {
+                    closeReviewForm();
+                    loadReviews();
                 }).catch(function(err) {
                     alert(err.message);
                 });
             }
         }
 
-        function loadReviews(preFillForm) {
-            if (preFillForm === undefined) preFillForm = true;
+        function loadReviews() {
             if (!contentId || !getAuthToken()) {
                 document.getElementById('reviews-list').innerHTML = '';
+                reviewFormOpen = false;
+                updateReviewFormUI();
                 return;
             }
 
@@ -426,30 +514,34 @@
                     var reviews = data.reviews || [];
                     var currentUserId = getCurrentUserId();
 
-                    userReviewId = null;
-                    reviews.forEach(function(review) {
-                        if (currentUserId && String(review.userId) === String(currentUserId)) {
-                            userReviewId = review.id;
-                            if (preFillForm) {
-                                updateRatingUI(review.rating);
-                                document.getElementById('review-input').value = review.review;
-                            }
-                        }
-                    });
+                    loadedReviews = reviews;
+                    updateWriteReviewButton(currentUserId);
+                    updateReviewFormUI();
 
                     if (reviews.length === 0) {
-                        list.innerHTML = '';
+                        list.innerHTML = '<p class="reviews-empty">No reviews yet. Be the first to share your thoughts.</p>';
                         return;
                     }
 
                     list.innerHTML = reviews.map(function(review) {
+                        var isMine = isCurrentUserReview(review, currentUserId);
                         var author = review.user
-                            ? escapeHtml(review.user.name) + ' (@' + escapeHtml(review.user.username) + ')'
+                            ? escapeHtml(review.user.name) + ' <span class="review-username">@' + escapeHtml(review.user.username) + '</span>'
                             : 'Anonymous';
-                        return '<div class="review-card mb-3">' +
-                            '<p class="review-author"><strong>' + author + '</strong></p>' +
-                            '<p class="review-rating">★ ' + review.rating + '/10</p>' +
+                        var cardClass = 'review-card mb-3' + (isMine ? ' review-card--mine' : '');
+                        var actions = isMine
+                            ? '<div class="review-actions">' +
+                                '<button type="button" class="btn-review-action" onclick="editReview(\'' + review.id + '\')">Edit</button>' +
+                                '<button type="button" class="btn-review-action btn-review-action--danger" onclick="deleteReview(\'' + review.id + '\')">Delete</button>' +
+                                '</div>'
+                            : '';
+                        return '<div class="' + cardClass + '">' +
+                            '<div class="review-card-header">' +
+                            '<p class="review-author">' + author + '</p>' +
+                            '<span class="review-rating">★ ' + review.rating + '/10</span>' +
+                            '</div>' +
                             '<p class="review-text">' + escapeHtml(review.review) + '</p>' +
+                            actions +
                             '</div>';
                     }).join('');
                 })

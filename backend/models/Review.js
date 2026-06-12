@@ -32,7 +32,7 @@ const reviewSchema = new mongoose.Schema({
   },
 });
 
-reviewSchema.index({ userId: 1, tmdbId: 1, type: 1 }, { unique: true });
+reviewSchema.index({ userId: 1, tmdbId: 1, type: 1 });
 reviewSchema.index({ tmdbId: 1, type: 1 });
 
 module.exports = mongoose.model('Review', reviewSchema);

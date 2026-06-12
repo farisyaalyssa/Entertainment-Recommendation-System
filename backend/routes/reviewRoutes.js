@@ -65,16 +65,6 @@ router.post('/', validateSubmitReview, async (req, res) => {
   try {
     const { tmdbId, type, rating, review } = req.body;
 
-    const existingReview = await Review.findOne({
-      userId: req.user._id,
-      tmdbId,
-      type,
-    });
-
-    if (existingReview) {
-      return res.status(409).json({ message: 'You have already reviewed this title' });
-    }
-
     const newReview = await Review.create({
       userId: req.user._id,
       tmdbId,
@@ -88,10 +78,6 @@ router.post('/', validateSubmitReview, async (req, res) => {
       review: formatReview(newReview),
     });
   } catch (error) {
-    if (error.code === 11000) {
-      return res.status(409).json({ message: 'You have already reviewed this title' });
-    }
-
     console.error('Submit review error:', error.message);
     res.status(500).json({ message: 'Server error submitting review' });
   }

@@ -1,5 +1,17 @@
 const express = require('express');
 const axios = require('axios');
+const {
+  parsePage,
+  parseRating,
+  normalizeType,
+  mapSearchItem,
+  mapDiscoverItem,
+  resolveGenreId,
+  buildDiscoverParams,
+  applyResultFilters,
+  normalizeContentType,
+  mapContentDetail,
+} = require('../utils/searchUtils');
 
 const router = express.Router();
 
@@ -9,75 +21,6 @@ var genreCache = null;
 
 function getApiKey() {
   return process.env.TMDB_API_KEY;
-}
-
-function parsePage(value) {
-  var page = parseInt(value, 10);
-  return page > 0 ? page : 1;
-}
-
-function parseRating(value) {
-  if (!value) return null;
-  var rating = Number(value);
-  return Number.isFinite(rating) ? rating : null;
-}
-
-function normalizeType(value) {
-  if (!value) return 'all';
-  var lower = String(value).toLowerCase();
-  if (lower === 'movie' || lower === 'movies') return 'movie';
-  if (lower === 'tv' || lower === 'tv show' || lower === 'tv shows') return 'tv';
-  return 'all';
-}
-
-function getPrimaryGenre(genreIds, genreMap) {
-  if (!genreIds || !genreIds.length) return '';
-
-  for (var i = 0; i < genreIds.length; i++) {
-    if (genreMap[genreIds[i]]) {
-      return genreMap[genreIds[i]];
-    }
-  }
-
-  return '';
-}
-
-function mapSearchItem(item, genreMap) {
-  var genreIds = item.genre_ids || [];
-
-  return {
-    tmdbId: item.id,
-    title: item.title || item.name,
-    mediaType: item.media_type,
-    overview: item.overview,
-    releaseDate: item.release_date || item.first_air_date,
-    rating: item.vote_average,
-    popularity: item.popularity || 0,
-    genreIds: genreIds,
-    genre: getPrimaryGenre(genreIds, genreMap),
-    poster: item.poster_path
-      ? 'https://image.tmdb.org/t/p/w500' + item.poster_path
-      : null,
-  };
-}
-
-function mapDiscoverItem(item, mediaType, genreMap) {
-  var genreIds = item.genre_ids || [];
-
-  return {
-    tmdbId: item.id,
-    title: item.title || item.name,
-    mediaType: mediaType,
-    overview: item.overview,
-    releaseDate: item.release_date || item.first_air_date,
-    rating: item.vote_average,
-    popularity: item.popularity || 0,
-    genreIds: genreIds,
-    genre: getPrimaryGenre(genreIds, genreMap),
-    poster: item.poster_path
-      ? 'https://image.tmdb.org/t/p/w500' + item.poster_path
-      : null,
-  };
 }
 
 async function loadGenres(apiKey) {
@@ -108,32 +51,6 @@ async function loadGenres(apiKey) {
 
   genreCache = { byId: byId, byName: byName, list: list };
   return genreCache;
-}
-
-function resolveGenreId(genreValue, genreData) {
-  if (!genreValue) return null;
-
-  var asNumber = Number(genreValue);
-  if (Number.isFinite(asNumber) && genreData.byId[asNumber]) {
-    return asNumber;
-  }
-
-  return genreData.byName[String(genreValue).toLowerCase()] || null;
-}
-
-function buildDiscoverParams(apiKey, page, genreId, minRating) {
-  var params = {
-    api_key: apiKey,
-    language: 'en-US',
-    page: page,
-    sort_by: 'popularity.desc',
-    include_adult: false,
-  };
-
-  if (genreId) params.with_genres = genreId;
-  if (minRating) params['vote_average.gte'] = minRating;
-
-  return params;
 }
 
 async function fetchDiscover(apiKey, mediaType, page, genreId, minRating, genreMap) {
@@ -202,16 +119,6 @@ async function fetchBrowseResults(apiKey, type, page, genreId, minRating, genreM
   }
 
   return fetchTrending(apiKey, page, genreMap);
-}
-
-function applyResultFilters(results, type, genreId, minRating) {
-  return results.filter(function(item) {
-    if (type === 'movie' && item.mediaType !== 'movie') return false;
-    if (type === 'tv' && item.mediaType !== 'tv') return false;
-    if (genreId && (!item.genreIds || item.genreIds.indexOf(genreId) === -1)) return false;
-    if (minRating && (item.rating || 0) < minRating) return false;
-    return true;
-  });
 }
 
 router.get('/genres', async (req, res) => {
@@ -314,4 +221,62 @@ router.get('/', async (req, res) => {
   }
 });
 
+const contentRouter = express.Router();
+
+contentRouter.get('/:type/:tmdbId', async (req, res) => {
+  try {
+    const apiKey = getApiKey();
+    if (!apiKey) {
+      return res.status(500).json({
+        success: false,
+        message: 'TMDB API key is not configured on the server',
+      });
+    }
+
+    const mediaType = normalizeContentType(req.params.type);
+    const tmdbId = Number(req.params.tmdbId);
+
+    if (!mediaType) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid content type. Use movie or tv.',
+      });
+    }
+
+    if (!Number.isFinite(tmdbId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid TMDB ID.',
+      });
+    }
+
+    const response = await axios.get(TMDB_BASE + '/' + mediaType + '/' + tmdbId, {
+      params: {
+        api_key: apiKey,
+        language: 'en-US',
+      },
+    });
+
+    if (!response.data || !response.data.id) {
+      return res.status(502).json({
+        success: false,
+        message: 'Failed to retrieve content details from TMDB',
+      });
+    }
+
+    return res.json({
+      success: true,
+      content: mapContentDetail(response.data, mediaType),
+    });
+  } catch (error) {
+    console.error('TMDB content detail error:', error.message);
+
+    return res.status(502).json({
+      success: false,
+      message: 'Failed to retrieve content details from TMDB',
+    });
+  }
+});
+
 module.exports = router;
+module.exports.contentRouter = contentRouter;
